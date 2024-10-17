@@ -7,7 +7,7 @@ This project is a recipe management application developed in Python using Tkinte
 - **Add Recipes**: Create new recipes with name, ingredients, steps, difficulty, price, and an image.
 - **Import/Export Recipes**: Share your recipes with friends by exporting them to a JSON file, which can be imported by others.
 - **Image Encoding**: Encode images in Base64 and store them in the JSON file to keep everything in a single file.
-- **Recipe Management**: View, edit, and delete recipes. You can also add favorites or sort recipes by difficulty or price.
+- **Recipe Management**: View and edit. You can also sort recipes by difficulty or price.
 
 ## Requirements
 
