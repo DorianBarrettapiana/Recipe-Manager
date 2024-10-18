@@ -1,33 +1,59 @@
+# Imports
 import json
 import tkinter as tk
 from tkinter import messagebox, filedialog, Toplevel
 import base64
 import os
+import sys
 
+# Get the path of the main.py
+def get_base_path():
+    if hasattr(sys, '_MEIPASS'):
+        return sys._MEIPASS
+    else:
+        return os.path.dirname(os.path.abspath(__file__))
+
+base_path = get_base_path()
+recipes_dir = os.path.join(base_path, 'recipes') 
+json_path = os.path.join(recipes_dir, 'recipes.json')
+icon_path = os.path.join(base_path, 'resources/Fork_Knife.ico')
+im_dir = os.path.join(base_path, 'temp')
+im_path = os.path.join(base_path, 'temp_image.png')
+    
+# Load JSON recipe file, and create it if it doesn't exist
 def load_recipe():
-    if os.path.exists('recipes.json'):
-        with open('recipes.json', 'r') as f:
+    if not os.path.exists(recipes_dir):
+        os.makedirs(recipes_dir)
+
+    if os.path.exists(json_path):
+        with open(json_path, 'r') as f:
             try:
                 recipes = json.load(f)
                 if isinstance(recipes, dict):
                     return recipes
                 else:
-                    messagebox.showerror("Error", "No dictionnary contained.")
+                    messagebox.showerror("Error", "The file does not contain a dictionary.")
                     return {}
             except json.JSONDecodeError:
-                messagebox.showerror("Error", "Corrupted file.")
+                messagebox.showerror("Error", "The file is corrupted or invalid.")
                 return {}
     else:
-        messagebox.showerror("Error", "File doesn't exists.")
-        return {}
+        with open(json_path, 'w') as f:
+            empty_recipes = {} 
+            json.dump(empty_recipes, f, indent=4)
+            messagebox.showinfo("Info", f"File not found, created a new one at: {json_path}")
+        return empty_recipes
 
+# Export a recipe to a JSON file to share
 def export_recipe():
     recipes = load_recipe()
     if not recipes:
         return  
 
     export_window = tk.Toplevel()
+    export_window.iconbitmap(icon_path)
     export_window.title("Export a recipe")
+    export_window.resizable(False, False)
 
     listbox = tk.Listbox(export_window, width=50, height=10)
     listbox.pack(pady=10)
@@ -51,6 +77,7 @@ def export_recipe():
     select_button = tk.Button(export_window, text="Export", command=select_recipe)
     select_button.pack(pady=10)
 
+# Import an exported JSON file to add to the data base
 def import_recipe():
     filepath = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
     if filepath:
@@ -65,7 +92,7 @@ def import_recipe():
                     if recipe_name not in recipes:
                         recipes[recipe_name] = new_recipe[recipe_name]
                         
-                        with open('recipes.json', 'w') as f:
+                        with open(json_path, 'w') as f:
                             json.dump(recipes, f, indent=4)
                         messagebox.showinfo("Success", f"The recipe : '{recipe_name}' have been successfully exported.")
                     else:
@@ -75,13 +102,15 @@ def import_recipe():
             except json.JSONDecodeError:
                 messagebox.showerror("Error", "Corrupted file.")
 
-def save_recipes(recipes, file_path='recipes.json'):
-    """Sauvegarde les recipes dans un fichier JSON."""
+# Save the recipe into a JSON file
+def save_recipes(recipes, file_path=json_path):
     with open(file_path, 'w') as f:
         json.dump(recipes, f, indent=4)
 
+# Add a recipe to the data base
 def add_recipe():
     recipe_window = tk.Toplevel()
+    recipe_window.iconbitmap(icon_path)
     recipe_window.title("Add a recipe")
     recipe_window.configure(bg='#F7F7F7') 
     recipe_window.geometry("800x600") 
@@ -89,7 +118,7 @@ def add_recipe():
 
     name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg='#F7F7F7', fg='black')
     name_entry = tk.Entry(recipe_window, width=75)
-    name_label.pack(pady=(25, 10))
+    name_label.pack(pady=(20, 10))
     name_entry.pack(pady=(0, 20))
 
     difficulty_price_frame = tk.Frame(recipe_window, bg='#F7F7F7')
@@ -117,8 +146,8 @@ def add_recipe():
 
     current_recipe = {}
     
-    image_button = tk.Button(recipe_window, text="Add a photo", font=("Calibri", 12, "bold"), command=upload_image)
-    image_button.pack(pady=(15, 15))
+    image_button = tk.Button(recipe_window, text="Add a photo", font=("Calibri", 12, "bold"), command=upload_image, width=22)
+    image_button.pack(pady=(10, 10))
     image_label = tk.Label(recipe_window, text="", bg='#F7F7F7', fg='black')
     image_label.pack(pady=(0, 10))
 
@@ -134,7 +163,6 @@ def add_recipe():
     ingredient_entry = tk.Entry(ingredients_steps_frame, width=25)
 
     def validate_quantity(action, value_if_allowed):
-        """Permet de n'accepter que des chiffres dans la quantité."""
         if action == '1':  
             return value_if_allowed.isdigit()
         return True
@@ -159,7 +187,7 @@ def add_recipe():
         else:
             messagebox.showwarning("Error", "Please fill all the entries.")
 
-    add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient)
+    add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient, width=37)
     add_ingredient_button.grid(row=3, column=0, pady=(5, 10), columnspan=3)  # Bouton occupe 3 colonnes
 
     step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg='#F7F7F7', fg='black')
@@ -179,10 +207,11 @@ def add_recipe():
         else:
             messagebox.showwarning("Error", "Please add a description for the step.")
 
-    add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step)
+    add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step, width=37)
     add_step_button.grid(row=3, column=4, pady=(5, 10))
 
     def save_recipe():
+        recipes = load_recipe()
         recipe_name = name_entry.get().strip()
         if recipe_name:
             recipe = {
@@ -200,13 +229,32 @@ def add_recipe():
         else:
             messagebox.showwarning("Error", "The recipe's name is mandatory.")
 
-    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe)
-    save_button.pack(pady=(15, 15))
+    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=73)
+    save_button.pack(pady=(20, 15))
 
+import os
+
+# Function to delete temporary files
+def clean_temp_files():
+    temp_files = [im_path]
+    
+    for temp_file in temp_files:
+        try:
+            if os.path.exists(temp_file):
+                os.remove(temp_file)
+                print(f"Temporary file {temp_file} deleted.")
+            else:
+                print(f"File {temp_file} not found.")
+        except Exception as e:
+            print(f"Error deleting file {temp_file}: {e}")
+
+# Browse the data base and display recipes
 def view_recipe():
     view_window = Toplevel()
+    view_window.iconbitmap(icon_path)
     view_window.title("Recipes Displayer")
     view_window.geometry("400x400")
+    view_window.resizable(False, False)
     view_window.configure(bg='#F7F7F7')
 
     recipes = load_recipe()
@@ -237,6 +285,7 @@ def view_recipe():
             selected_recipe = recipes[selected_recipe_name]
 
             recipe_detail_window = Toplevel(view_window)
+            recipe_detail_window.iconbitmap(icon_path)
             recipe_detail_window.title(selected_recipe_name)
             recipe_detail_window.geometry("400x400")
             recipe_detail_window.configure(bg='#F7F7F7')
@@ -277,18 +326,23 @@ def view_recipe():
 
             if selected_recipe.get("image"):
                 img_data = base64.b64decode(selected_recipe["image"])
-                with open("temp_image.png", "wb") as img_file:
+
+                if not os.path.exists(im_dir):
+                    os.makedirs(im_dir)
+                    
+                with open(im_path, "wb") as img_file:
                     img_file.write(img_data)
 
                 img_label = tk.Label(recipe_detail_window, bg='#F7F7F7')
                 img_label.pack(pady=(10, 10))
 
-                img = tk.PhotoImage(file="temp_image.png")
+                img = tk.PhotoImage(file=im_path)
                 img_label.config(image=img)
                 img_label.image = img  
 
             close_button = tk.Button(recipe_detail_window, text="Close", command=recipe_detail_window.destroy)
             close_button.pack(pady=(10, 10))
+            clean_temp_files()
         else:
             messagebox.showwarning("Error", "Please select a recipe.")
 
@@ -313,6 +367,7 @@ def view_recipe():
 # Main window
 def create_main_window():
     root = tk.Tk()
+    root.iconbitmap(icon_path)
     root.title("Recipe Manager")
     root.configure(bg='#F7F7F7')
     root.geometry("800x400") 
@@ -321,19 +376,19 @@ def create_main_window():
     label = tk.Label(root, text="Recipe Manager", font=("Calibri", 26, "bold"), bg='#F7F7F7', fg='black')
     label.pack(pady=(42, 42))
 
-    add_button = tk.Button(root, text="Add a recipe", font=("Calibri", 14, "bold"), command=add_recipe)
+    add_button = tk.Button(root, text="Add a recipe", font=("Calibri", 14, "bold"), command=add_recipe, height=1, width=15)
     add_button.pack(pady=(10, 10))
 
-    view_button = tk.Button(root, text="Browse recipes", font=("Calibri", 14, "bold"), command=view_recipe)
+    view_button = tk.Button(root, text="Browse recipes", font=("Calibri", 14, "bold"), command=view_recipe, height=1, width=15)
     view_button.pack(pady=(10, 10))
 
-    export_button = tk.Button(root, text="Export a recipe",font=("Calibri", 12, "bold"), command=export_recipe)
+    export_button = tk.Button(root, text="Export a recipe",font=("Calibri", 14, "bold"), command=export_recipe, height=1, width=15)
     export_button.pack(pady=10)
 
-    import_button = tk.Button(root, text="Import a recipe",font=("Calibri", 12, "bold"), command=import_recipe)
+    import_button = tk.Button(root, text="Import a recipe",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
     import_button.pack(pady=10)
 
     root.mainloop()
 
-recipes = load_recipe()
+# Entry point
 create_main_window()
