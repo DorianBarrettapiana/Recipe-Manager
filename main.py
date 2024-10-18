@@ -396,7 +396,7 @@ def create_main_window():
     export_button = tk.Button(root, text="Export recipes",font=("Calibri", 14, "bold"), command=export_recipe, height=1, width=15)
     export_button.pack(pady=10)
 
-    import_button = tk.Button(root, text="Import recipes",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
+    import_button = tk.Button(root, text="Import recipes lol",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
     import_button.pack(pady=10)
 
     root.mainloop()
