@@ -14,6 +14,7 @@ This project is a recipe management application developed in Python using Tkinte
 - Python 3.7 or higher
 - Tkinter (comes pre-installed with Python)
 - `base64` for image encoding (part of Python's standard library)
+- pyInstaller (or auto-py-to-exe) for compilation (optional)
 
 ## Installation
 
