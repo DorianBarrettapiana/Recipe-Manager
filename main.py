@@ -6,6 +6,8 @@ import base64
 import os
 import sys
 
+beige = "#F7F7F7"
+
 # Get the paths to manage external files for pyInstaller packaging
 def get_base_path():
     if hasattr(sys, '_MEIPASS'):
@@ -125,25 +127,25 @@ def add_recipe():
     recipe_window = tk.Toplevel()
     recipe_window.iconbitmap(icon_path)
     recipe_window.title("Add a recipe")
-    recipe_window.configure(bg='#F7F7F7') 
+    recipe_window.configure(bg=beige) 
     recipe_window.geometry("800x600") 
     recipe_window.resizable(False, False)
 
-    name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg='#F7F7F7', fg='black')
+    name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg=beige, fg='black')
     name_entry = tk.Entry(recipe_window, width=75)
     name_label.pack(pady=(20, 10))
     name_entry.pack(pady=(0, 20))
 
-    difficulty_price_frame = tk.Frame(recipe_window, bg='#F7F7F7')
+    difficulty_price_frame = tk.Frame(recipe_window, bg=beige)
     difficulty_price_frame.pack(pady=(5, 20))
 
-    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg='#F7F7F7', fg='black')
+    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg=beige, fg='black')
     difficulty_var = tk.IntVar(value=1)
     difficulty_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=difficulty_var)
     difficulty_label.pack(side=tk.LEFT, padx=(0, 25))
     difficulty_scale.pack(side=tk.LEFT, padx=(0, 20))
 
-    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg='#F7F7F7', fg='black')
+    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg=beige, fg='black')
     price_var = tk.IntVar(value=1)
     price_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=price_var)
     price_label.pack(side=tk.LEFT, padx=(0, 25))
@@ -161,13 +163,13 @@ def add_recipe():
     
     image_button = tk.Button(recipe_window, text="Add a photo", font=("Calibri", 12, "bold"), command=upload_image, width=22)
     image_button.pack(pady=(10, 10))
-    image_label = tk.Label(recipe_window, text="", bg='#F7F7F7', fg='black')
+    image_label = tk.Label(recipe_window, text="", bg=beige, fg='black')
     image_label.pack(pady=(0, 10))
 
-    ingredients_steps_frame = tk.Frame(recipe_window, bg='#F7F7F7')
+    ingredients_steps_frame = tk.Frame(recipe_window, bg=beige)
     ingredients_steps_frame.pack(pady=(2, 25))
 
-    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg='#F7F7F7', fg='black')
+    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg=beige, fg='black')
     ingredient_label.grid(row=0, column=0, padx=(10, 10), pady=(0, 5), columnspan=3)  
 
     ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
@@ -203,7 +205,7 @@ def add_recipe():
     add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient, width=37)
     add_ingredient_button.grid(row=3, column=0, pady=(5, 10), columnspan=3)  # Bouton occupe 3 colonnes
 
-    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg='#F7F7F7', fg='black')
+    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=beige, fg='black')
     step_label.grid(row=0, column=4, padx=(10, 5), pady=(0, 5))
 
     step_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
@@ -226,7 +228,9 @@ def add_recipe():
     def save_recipe():
         recipes = load_recipe()
         recipe_name = name_entry.get().strip()
-        if recipe_name:
+        ingredient_listbox_val = ingredient_listbox.get(0)
+        step_listbox_val = step_listbox.get(0)
+        if recipe_name and ingredient_listbox_val and step_listbox_val:
             recipe = {
                 'name': recipe_name,
                 'difficulty': difficulty_var.get(),
@@ -240,7 +244,7 @@ def add_recipe():
             messagebox.showinfo("Success", "Recipe sucessfully added !")
             recipe_window.destroy()  
         else:
-            messagebox.showwarning("Error", "The recipe's name is mandatory.")
+            messagebox.showwarning("Error", "Please fill all the entries.")
 
     save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=73)
     save_button.pack(pady=(20, 15))
@@ -266,11 +270,11 @@ def view_recipe():
     view_window.title("Recipes Displayer")
     view_window.geometry("400x400")
     view_window.resizable(False, False)
-    view_window.configure(bg='#F7F7F7')
+    view_window.configure(bg=beige)
 
     recipes = load_recipe()
 
-    recipe_list_frame = tk.Frame(view_window, bg='#F7F7F7')
+    recipe_list_frame = tk.Frame(view_window, bg=beige)
     recipe_list_frame.pack(pady=(10, 10))
 
     recipe_listbox = tk.Listbox(recipe_list_frame, width=80, height=15)
@@ -299,9 +303,9 @@ def view_recipe():
             recipe_detail_window.iconbitmap(icon_path)
             recipe_detail_window.title(selected_recipe_name)
             recipe_detail_window.geometry("400x400")
-            recipe_detail_window.configure(bg='#F7F7F7')
+            recipe_detail_window.configure(bg=beige)
 
-            tk.Label(recipe_detail_window, text="Number of people :", bg='#F7F7F7').pack(pady=(10, 0))
+            tk.Label(recipe_detail_window, text="Number of people :", bg=beige).pack(pady=(10, 0))
             num_people_entry = tk.Entry(recipe_detail_window)
             num_people_entry.pack(pady=(0, 10))
 
@@ -311,7 +315,7 @@ def view_recipe():
             validate_command = recipe_detail_window.register(validate_input)
             num_people_entry.config(validate="key", validatecommand=(validate_command, '%S'))
 
-            recipe_info_frame = tk.Frame(recipe_detail_window, bg='#F7F7F7')
+            recipe_info_frame = tk.Frame(recipe_detail_window, bg=beige)
             recipe_info_frame.pack(pady=(10, 10))
 
             def display_recipe_details():
@@ -332,7 +336,7 @@ def view_recipe():
             show_button = tk.Button(recipe_detail_window, text="Show", command=display_recipe_details)
             show_button.pack(pady=(10, 10))
 
-            recipe_label = tk.Label(recipe_info_frame, bg='#F7F7F7', fg='black', font=("Calibri", 12))
+            recipe_label = tk.Label(recipe_info_frame, bg=beige, fg='black', font=("Calibri", 12))
             recipe_label.pack(pady=(10, 10))
 
             if selected_recipe.get("image"):
@@ -344,7 +348,7 @@ def view_recipe():
                 with open(im_path, "wb") as img_file:
                     img_file.write(img_data)
 
-                img_label = tk.Label(recipe_detail_window, bg='#F7F7F7')
+                img_label = tk.Label(recipe_detail_window, bg=beige)
                 img_label.pack(pady=(10, 10))
 
                 img = tk.PhotoImage(file=im_path)
@@ -366,7 +370,7 @@ def view_recipe():
         for name, details in sorted_recipes:
             recipe_listbox.insert(tk.END, f"{name} - Difficulty: {details['difficulty']} - Price: {details['price']}")
 
-    sort_frame = tk.Frame(view_window, bg='#F7F7F7')
+    sort_frame = tk.Frame(view_window, bg=beige)
     sort_frame.pack(pady=(10, 10))
 
     difficulty_button = tk.Button(sort_frame, text="Sort by Difficulty", command=lambda: sort_recipes('difficulty'))
@@ -380,11 +384,11 @@ def create_main_window():
     root = tk.Tk()
     root.iconbitmap(icon_path)
     root.title("Recipe Manager")
-    root.configure(bg='#F7F7F7')
+    root.configure(bg=beige)
     root.geometry("800x400") 
     root.resizable(False, False)  
 
-    label = tk.Label(root, text="Recipe Manager", font=("Calibri", 26, "bold"), bg='#F7F7F7', fg='black')
+    label = tk.Label(root, text="Recipe Manager", font=("Calibri", 26, "bold"), bg=beige, fg='black')
     label.pack(pady=(36, 36))
 
     add_button = tk.Button(root, text="Add a recipe", font=("Calibri", 14, "bold"), command=add_recipe, height=1, width=15)
@@ -396,7 +400,7 @@ def create_main_window():
     export_button = tk.Button(root, text="Export recipes",font=("Calibri", 14, "bold"), command=export_recipe, height=1, width=15)
     export_button.pack(pady=10)
 
-    import_button = tk.Button(root, text="Import recipes lol",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
+    import_button = tk.Button(root, text="Import recipes",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
     import_button.pack(pady=10)
 
     root.mainloop()
