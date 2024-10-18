@@ -24,3 +24,11 @@ This project is a recipe management application developed in Python using Tkinte
    ```bash
    git clone https://github.com/Nayrhode/recipe-manager.git
    cd recipe-manager
+
+2. **exe compilation:**
+
+   You can compile it using pyInstaller:
+
+   ```bash
+   pyinstaller --onedir --windowed --add-data "~\resources;resources/" "~\main.py"
+
