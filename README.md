@@ -30,5 +30,5 @@ This project is a recipe management application developed in Python using Tkinte
    You can compile it using pyInstaller:
 
    ```bash
-   pyinstaller --onedir --windowed --add-data "~\resources;resources/" "~\main.py"
+   pyinstaller --onedir --windowed --add-data "recipe-manager\resources;resources/" "recipe-manager\main.py"
 
