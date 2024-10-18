@@ -12,13 +12,13 @@ def charger_recettes():
                 if isinstance(recettes, dict):  # Vérifie que c'est bien un dictionnaire
                     return recettes
                 else:
-                    messagebox.showerror("Erreur", "Le fichier JSON ne contient pas un dictionnaire de recettes.")
+                    messagebox.showerror("Error", "No dictionnary contained.")
                     return {}
             except json.JSONDecodeError:
-                messagebox.showerror("Erreur", "Le fichier JSON est corrompu ou mal formé.")
+                messagebox.showerror("Error", "Corrupted file.")
                 return {}
     else:
-        messagebox.showerror("Erreur", "Le fichier recipes.json n'existe pas.")
+        messagebox.showerror("Error", "File doesn't exists.")
         return {}
 
 def exporter_recette():
@@ -28,7 +28,7 @@ def exporter_recette():
 
     # Fenêtre pour sélectionner la recette à exporter
     export_window = tk.Toplevel()
-    export_window.title("Exporter une recette")
+    export_window.title("Export a recipe")
 
     # Listbox pour afficher les recettes
     listbox = tk.Listbox(export_window, width=50, height=10)
@@ -47,12 +47,12 @@ def exporter_recette():
             if filepath:
                 with open(filepath, 'w') as export_file:
                     json.dump({selected: recette}, export_file)  # Sauvegarde uniquement la recette sélectionnée
-                messagebox.showinfo("Exporté", "Recette exportée avec succès!")
+                messagebox.showinfo("Exported", "Recipe successfully exported !")
         except tk.TclError:
-            messagebox.showwarning("Sélectionnez une recette", "Veuillez sélectionner une recette à exporter.")
+            messagebox.showwarning("Select a recipe", "Select a recipe to export.")
 
     # Bouton pour sélectionner la recette
-    select_button = tk.Button(export_window, text="Exporter", command=select_recette)
+    select_button = tk.Button(export_window, text="Export", command=select_recette)
     select_button.pack(pady=10)
 
 def importer_recette():
@@ -74,13 +74,13 @@ def importer_recette():
                         # Sauvegarder les recettes mises à jour
                         with open('recipes.json', 'w') as f:
                             json.dump(recettes, f, indent=4)
-                        messagebox.showinfo("Succès", f"La recette '{recette_name}' a été importée avec succès.")
+                        messagebox.showinfo("Success", f"The recipe : '{recette_name}' have been successfully exported.")
                     else:
-                        messagebox.showwarning("Doublon", f"La recette '{recette_name}' existe déjà.")
+                        messagebox.showwarning("Clone !", f"The recipe : '{recette_name}' already exists.")
                 else:
-                    messagebox.showerror("Erreur", "Le fichier importé ne contient pas une recette valide.")
+                    messagebox.showerror("Error", "The file is not valid.")
             except json.JSONDecodeError:
-                messagebox.showerror("Erreur", "Le fichier est corrompu ou mal formé.")
+                messagebox.showerror("Error", "Corrupted file.")
 
 def load_recipes(file_path='recipes.json'):
     """Charge les recettes à partir d'un fichier JSON. Si le fichier est vide, renvoie un dictionnaire vide."""
@@ -110,13 +110,13 @@ def save_recipes(recipes, file_path='recipes.json'):
 
 def add_recipe():
     recipe_window = tk.Toplevel()
-    recipe_window.title("Ajouter une recette")
+    recipe_window.title("Add a recipe")
     recipe_window.configure(bg='#fdf2e9')  # Fond beige
     recipe_window.geometry("800x600") 
     recipe_window.resizable(False, False)
 
     # Widgets pour nom de la recette
-    name_label = tk.Label(recipe_window, text="Nom de la recette", font=("Calibri", 16, "bold"), bg='#fdf2e9', fg='black')
+    name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg='#fdf2e9', fg='black')
     name_entry = tk.Entry(recipe_window, width=75)
     name_label.pack(pady=(25, 10))
     name_entry.pack(pady=(0, 20))
@@ -125,13 +125,13 @@ def add_recipe():
     difficulty_price_frame = tk.Frame(recipe_window, bg='#fdf2e9')
     difficulty_price_frame.pack(pady=(5, 20))
 
-    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulté (1-5)", font=("Calibri", 10, "bold"), bg='#fdf2e9', fg='black')
+    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg='#fdf2e9', fg='black')
     difficulty_var = tk.IntVar(value=1)
     difficulty_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=difficulty_var)
     difficulty_label.pack(side=tk.LEFT, padx=(0, 25))
     difficulty_scale.pack(side=tk.LEFT, padx=(0, 20))
 
-    price_label = tk.Label(difficulty_price_frame, text="Prix (1-5)", font=("Calibri", 10, "bold"), bg='#fdf2e9', fg='black')
+    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg='#fdf2e9', fg='black')
     price_var = tk.IntVar(value=1)
     price_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=price_var)
     price_label.pack(side=tk.LEFT, padx=(0, 25))
@@ -139,18 +139,18 @@ def add_recipe():
 
     # Ajout d'une image
     def upload_image():
-        file_path = filedialog.askopenfilename(title="Sélectionnez une image", filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")])
+        file_path = filedialog.askopenfilename(title="Select a photo", filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")])
         if file_path:
             # Lire et encoder l'image en Base64
             with open(file_path, "rb") as image_file:
                 encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
                 current_recipe["image"] = encoded_string
-                image_label.config(text="Image ajoutée: " + file_path.split("/")[-1])
+                image_label.config(text="Photo added : " + file_path.split("/")[-1])
 
     current_recipe = {}
     
-    image_button = tk.Button(recipe_window, text="Ajouter une image", font=("Calibri", 12), command=upload_image)
-    image_button.pack(pady=(10, 10))
+    image_button = tk.Button(recipe_window, text="Add a photo", font=("Calibri", 12, "bold"), command=upload_image)
+    image_button.pack(pady=(15, 15))
     image_label = tk.Label(recipe_window, text="", bg='#fdf2e9', fg='black')
     image_label.pack(pady=(0, 10))
 
@@ -159,7 +159,7 @@ def add_recipe():
     ingredients_steps_frame.pack(pady=(2, 25))
 
     # Ingrédients et liste d'ajout
-    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingrédients", font=("Calibri", 15, "bold"), bg='#fdf2e9', fg='black')
+    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg='#fdf2e9', fg='black')
     ingredient_label.grid(row=0, column=0, padx=(10, 10), pady=(0, 5), columnspan=3)  # Occupe les 3 colonnes
 
     ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
@@ -192,20 +192,20 @@ def add_recipe():
             quantity_entry.delete(0, tk.END)
             unit_entry.delete(0, tk.END)
         else:
-            messagebox.showwarning("Erreur", "Veuillez remplir tous les champs pour l'ingrédient.")
+            messagebox.showwarning("Error", "Please fill all the entries.")
 
-    add_ingredient_button = tk.Button(ingredients_steps_frame, text="Ajoute l'ingrédient", font=("Calibri", 12), command=add_ingredient)
+    add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient)
     add_ingredient_button.grid(row=3, column=0, pady=(5, 10), columnspan=3)  # Bouton occupe 3 colonnes
 
     # Liste des étapes
-    step_label = tk.Label(ingredients_steps_frame, text="Étapes", font=("Calibri", 15, "bold"), bg='#fdf2e9', fg='black')
+    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg='#fdf2e9', fg='black')
     step_label.grid(row=0, column=4, padx=(10, 5), pady=(0, 5))
 
     step_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
     step_listbox.grid(row=1, column=4, padx=(10, 5), pady=(0, 10))
 
     # Ajouter une étape
-    step_entry = tk.Entry(ingredients_steps_frame, width=35)
+    step_entry = tk.Entry(ingredients_steps_frame, width=50)
     step_entry.grid(row=2, column=4, padx=(10, 5), pady=(0, 5))
 
     def add_step():
@@ -214,9 +214,9 @@ def add_recipe():
             step_listbox.insert(tk.END, step)
             step_entry.delete(0, tk.END)
         else:
-            messagebox.showwarning("Erreur", "Veuillez ajouter une description pour l'étape.")
+            messagebox.showwarning("Error", "Please add a description for the step.")
 
-    add_step_button = tk.Button(ingredients_steps_frame, text="Ajoute l'étape", font=("Calibri", 12), command=add_step)
+    add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step)
     add_step_button.grid(row=3, column=4, pady=(5, 10))
 
     # Bouton pour sauvegarder la recette
@@ -233,20 +233,22 @@ def add_recipe():
             }
             recipes[recipe_name] = recipe  # Ajouter la recette à l'objet recipes
             save_recipes(recipes)  # Sauvegarder dans le fichier JSON
-            messagebox.showinfo("Succès", "Recette ajoutée avec succès !")
+            messagebox.showinfo("Success", "Recipe sucessfully added !")
             recipe_window.destroy()  # Fermer la fenêtre après l'ajout
         else:
-            messagebox.showwarning("Erreur", "Le nom de la recette est obligatoire.")
+            messagebox.showwarning("Error", "The recipe's name is mandatory.")
 
-    save_button = tk.Button(recipe_window, text="Enregistrer la recette", font=("Calibri", 14), command=save_recipe)
-    save_button.pack(pady=(25, 20))
+    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe)
+    save_button.pack(pady=(15, 15))
 
 # Afficher les recettes
 def view_recipe():
     view_window = Toplevel()
-    view_window.title("Afficher les recettes")
+    view_window.title("Recipes Displayer")
     view_window.geometry("400x400")
     view_window.configure(bg='#fdf2e9')
+
+    recipes = load_recipes()
 
     recipe_list_frame = tk.Frame(view_window, bg='#fdf2e9')
     recipe_list_frame.pack(pady=(10, 10))
@@ -264,7 +266,7 @@ def view_recipe():
     def update_recipe_list():
         recipe_listbox.delete(0, tk.END)  # Effacer la liste existante
         for name, details in recipes.items():
-            recipe_listbox.insert(tk.END, f"{name} - Difficulté: {details['difficulty']} - Prix: {details['price']}")
+            recipe_listbox.insert(tk.END, f"{name} - Difficulty: {details['difficulty']} - Price: {details['price']}")
 
     update_recipe_list()
 
@@ -282,7 +284,7 @@ def view_recipe():
             recipe_detail_window.configure(bg='#fdf2e9')
 
             # Entrée pour le nombre de personnes
-            tk.Label(recipe_detail_window, text="Nombre de personnes :", bg='#fdf2e9').pack(pady=(10, 0))
+            tk.Label(recipe_detail_window, text="Number of people :", bg='#fdf2e9').pack(pady=(10, 0))
             num_people_entry = tk.Entry(recipe_detail_window)
             num_people_entry.pack(pady=(0, 10))
 
@@ -313,13 +315,13 @@ def view_recipe():
                     steps_text = "\n".join(selected_recipe['steps'])
         
                     # Affichage des détails de la recette
-                    recipe_label.config(text=f"Nom: {selected_recipe['name']}\nDifficulté: {selected_recipe['difficulty']}\nPrix: {selected_recipe['price']}\n\nIngrédients:\n{ingredients_text}\n\nÉtapes:\n{steps_text}")
+                    recipe_label.config(text=f"Name: {selected_recipe['name']}\nDifficulty: {selected_recipe['difficulty']}\nPrix: {selected_recipe['price']}\n\nIngredients:\n{ingredients_text}\n\nÉtapes:\n{steps_text}")
                 except ValueError:
-                    messagebox.showwarning("Erreur", "Veuillez entrer un nombre valide.")
+                    messagebox.showwarning("Error", "Enter a valid number.")
 
 
             # Bouton pour afficher les détails de la recette
-            show_button = tk.Button(recipe_detail_window, text="Afficher les détails", command=display_recipe_details)
+            show_button = tk.Button(recipe_detail_window, text="Show", command=display_recipe_details)
             show_button.pack(pady=(10, 10))
 
             # Label pour afficher les détails de la recette
@@ -341,13 +343,13 @@ def view_recipe():
                 img_label.image = img  # Référencer l'image pour éviter qu'elle soit détruite
 
             # Bouton de fermeture
-            close_button = tk.Button(recipe_detail_window, text="Fermer", command=recipe_detail_window.destroy)
+            close_button = tk.Button(recipe_detail_window, text="Close", command=recipe_detail_window.destroy)
             close_button.pack(pady=(10, 10))
         else:
-            messagebox.showwarning("Erreur", "Veuillez sélectionner une recette.")
+            messagebox.showwarning("Error", "Please select a recipe.")
 
     # Bouton pour afficher la recette sélectionnée
-    display_button = tk.Button(view_window, text="Afficher la recette sélectionnée", command=show_selected_recipe)
+    display_button = tk.Button(view_window, text="Display the selected recipe", command=show_selected_recipe)
     display_button.pack(pady=(10, 10))
 
     # Options de tri
@@ -355,41 +357,41 @@ def view_recipe():
         sorted_recipes = sorted(recipes.items(), key=lambda x: x[1][by])
         recipe_listbox.delete(0, tk.END)
         for name, details in sorted_recipes:
-            recipe_listbox.insert(tk.END, f"{name} - Difficulté: {details['difficulty']} - Prix: {details['price']}")
+            recipe_listbox.insert(tk.END, f"{name} - Difficulty: {details['difficulty']} - Price: {details['price']}")
 
     sort_frame = tk.Frame(view_window, bg='#fdf2e9')
     sort_frame.pack(pady=(10, 10))
 
-    difficulty_button = tk.Button(sort_frame, text="Trier par difficulté", command=lambda: sort_recipes('difficulty'))
+    difficulty_button = tk.Button(sort_frame, text="Sort by Difficulty", command=lambda: sort_recipes('difficulty'))
     difficulty_button.pack(side=tk.LEFT, padx=(10, 5))
 
-    price_button = tk.Button(sort_frame, text="Trier par prix", command=lambda: sort_recipes('price'))
+    price_button = tk.Button(sort_frame, text="Sort by Price", command=lambda: sort_recipes('price'))
     price_button.pack(side=tk.LEFT, padx=(5, 10))
 
 # Main window
 def create_main_window():
     root = tk.Tk()
-    root.title("Gestionnaire de recette")
+    root.title("Recipe Manager")
     root.configure(bg='#fdf2e9')
     root.geometry("800x400") 
     root.resizable(False, False)  
 
     # Créer des widgets par-dessus le fond
-    label = tk.Label(root, text="Gestionnaire de recette", font=("Calibri", 24), bg='#fdf2e9', fg='black')
+    label = tk.Label(root, text="Recipe Manager", font=("Calibri", 26, "bold"), bg='#fdf2e9', fg='black')
     label.pack(pady=(42, 42))
 
-    add_button = tk.Button(root, text="Ajouter une recette", font=("Calibri", 14), command=add_recipe)
+    add_button = tk.Button(root, text="Add a recipe", font=("Calibri", 14, "bold"), command=add_recipe)
     add_button.pack(pady=(10, 10))
 
-    view_button = tk.Button(root, text="Afficher une recette", font=("Calibri", 14), command=view_recipe)
+    view_button = tk.Button(root, text="Browse recipes", font=("Calibri", 14, "bold"), command=view_recipe)
     view_button.pack(pady=(10, 10))
 
     # Bouton Exporter
-    export_button = tk.Button(root, text="Exporter une recette",font=("Calibri", 12), command=exporter_recette)
+    export_button = tk.Button(root, text="Export a recipe",font=("Calibri", 12, "bold"), command=exporter_recette)
     export_button.pack(pady=10)
 
     # Bouton Importer
-    import_button = tk.Button(root, text="Importer une recette",font=("Calibri", 12), command=importer_recette)
+    import_button = tk.Button(root, text="Import a recipe",font=("Calibri", 12, "bold"), command=importer_recette)
     import_button.pack(pady=10)
 
     root.mainloop()
