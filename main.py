@@ -6,7 +6,7 @@ import base64
 import os
 import sys
 
-# Get the path of the main.py
+# Get the paths to manage external files for pyInstaller packaging
 def get_base_path():
     if hasattr(sys, '_MEIPASS'):
         return sys._MEIPASS
@@ -46,16 +46,16 @@ def load_recipe():
 
 # Export a recipe to a JSON file to share
 def export_recipe():
-    recipes = load_recipe()
+    recipes = load_recipe()  
     if not recipes:
         return  
 
-    export_window = tk.Toplevel()
-    export_window.iconbitmap(icon_path)
-    export_window.title("Export a recipe")
-    export_window.resizable(False, False)
+    export_window = tk.Toplevel()  
+    export_window.iconbitmap(icon_path)  
+    export_window.title("Export a recipe")  
+    export_window.resizable(False, False)  
 
-    listbox = tk.Listbox(export_window, width=50, height=10)
+    listbox = tk.Listbox(export_window, width=50, height=10, selectmode=tk.MULTIPLE)
     listbox.pack(pady=10)
 
     for recipe_name in recipes.keys():
@@ -63,42 +63,55 @@ def export_recipe():
 
     def select_recipe():
         try:
-            selected = listbox.get(listbox.curselection())
-            recipe = recipes[selected]  
+            selected_indices = listbox.curselection()
+            if not selected_indices:
+                raise tk.TclError  
+
+            selected_recipes = [listbox.get(i) for i in selected_indices]
 
             filepath = filedialog.asksaveasfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
             if filepath:
+                selected_data = {recipe_name: recipes[recipe_name] for recipe_name in selected_recipes}
+
                 with open(filepath, 'w') as export_file:
-                    json.dump({selected: recipe}, export_file)  
-                messagebox.showinfo("Exported", "Recipe successfully exported !")
+                    json.dump(selected_data, export_file)
+
+                messagebox.showinfo("Exported", "Recipes successfully exported!")
         except tk.TclError:
-            messagebox.showwarning("Select a recipe", "Select a recipe to export.")
+            messagebox.showwarning("Select a recipe", "Select one or more recipes to export.")
 
     select_button = tk.Button(export_window, text="Export", command=select_recipe)
     select_button.pack(pady=10)
 
-# Import an exported JSON file to add to the data base
+# Import an exported JSON file to add to the database
 def import_recipe():
     filepath = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
     if filepath:
         with open(filepath, 'r') as import_file:
             try:
-                new_recipe = json.load(import_file)  
+                new_recipes = json.load(import_file)  
                 recipes = load_recipe()  
 
-                if isinstance(new_recipe, dict) and len(new_recipe) == 1:
-                    recipe_name = list(new_recipe.keys())[0]
-                    
-                    if recipe_name not in recipes:
-                        recipes[recipe_name] = new_recipe[recipe_name]
-                        
-                        with open(json_path, 'w') as f:
-                            json.dump(recipes, f, indent=4)
-                        messagebox.showinfo("Success", f"The recipe : '{recipe_name}' have been successfully exported.")
-                    else:
-                        messagebox.showwarning("Clone !", f"The recipe : '{recipe_name}' already exists.")
+                if isinstance(new_recipes, dict): 
+                    added_recipes = []  
+                    existing_recipes = []  
+
+                    for recipe_name, recipe_data in new_recipes.items(): 
+                        if recipe_name not in recipes:
+                            recipes[recipe_name] = recipe_data  
+                            added_recipes.append(recipe_name)  
+                        else:
+                            existing_recipes.append(recipe_name)  
+
+                    with open(json_path, 'w') as f:
+                        json.dump(recipes, f, indent=4)
+
+                    if added_recipes:
+                        messagebox.showinfo("Success", f"The following recipes have been imported:\n" + "\n".join(added_recipes))
+                    if existing_recipes:
+                        messagebox.showwarning("Clone !", f"The following recipes already exist and were not imported:\n" + "\n".join(existing_recipes))
                 else:
-                    messagebox.showerror("Error", "The file is not valid.")
+                    messagebox.showerror("Error", "The file format is not valid. Expected a dictionary of recipes.")
             except json.JSONDecodeError:
                 messagebox.showerror("Error", "Corrupted file.")
 
@@ -231,8 +244,6 @@ def add_recipe():
 
     save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=73)
     save_button.pack(pady=(20, 15))
-
-import os
 
 # Function to delete temporary files
 def clean_temp_files():
@@ -374,18 +385,18 @@ def create_main_window():
     root.resizable(False, False)  
 
     label = tk.Label(root, text="Recipe Manager", font=("Calibri", 26, "bold"), bg='#F7F7F7', fg='black')
-    label.pack(pady=(42, 42))
+    label.pack(pady=(36, 36))
 
     add_button = tk.Button(root, text="Add a recipe", font=("Calibri", 14, "bold"), command=add_recipe, height=1, width=15)
-    add_button.pack(pady=(10, 10))
+    add_button.pack(pady=(0, 10))
 
     view_button = tk.Button(root, text="Browse recipes", font=("Calibri", 14, "bold"), command=view_recipe, height=1, width=15)
     view_button.pack(pady=(10, 10))
 
-    export_button = tk.Button(root, text="Export a recipe",font=("Calibri", 14, "bold"), command=export_recipe, height=1, width=15)
+    export_button = tk.Button(root, text="Export recipes",font=("Calibri", 14, "bold"), command=export_recipe, height=1, width=15)
     export_button.pack(pady=10)
 
-    import_button = tk.Button(root, text="Import a recipe",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
+    import_button = tk.Button(root, text="Import recipes",font=("Calibri", 14, "bold"), command=import_recipe, height=1, width=15)
     import_button.pack(pady=10)
 
     root.mainloop()
