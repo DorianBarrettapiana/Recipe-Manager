@@ -2,6 +2,7 @@
 import json
 import tkinter as tk
 from tkinter import messagebox, filedialog, Toplevel
+from PIL import Image, ImageTk
 import base64
 import os
 import sys
@@ -128,7 +129,7 @@ def add_recipe():
     recipe_window.iconbitmap(icon_path)
     recipe_window.title("Add a recipe")
     recipe_window.configure(bg=beige) 
-    recipe_window.geometry("840x620") 
+    recipe_window.geometry("700x620") 
     recipe_window.resizable(False, False)
 
     name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg=beige, fg='black')
@@ -256,6 +257,8 @@ def add_recipe():
         
         popup = tk.Toplevel()
         popup.iconbitmap(icon_path)
+        popup.geometry("240x140")
+        popup.resizable(False, False)
         popup.title("Edit Ingredient")
         
         tk.Label(popup, text="Ingredient").grid(row=0, column=0, padx=5, pady=5)
@@ -264,7 +267,7 @@ def add_recipe():
         ingredient_name_entry.insert(0, name_part)
         
         tk.Label(popup, text="Quantity").grid(row=1, column=0, padx=5, pady=5)
-        ingredient_quantity_entry = tk.Entry(popup, width=10)
+        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd)
         ingredient_quantity_entry.grid(row=1, column=1, padx=5, pady=5)
         ingredient_quantity_entry.insert(0, quantity_part)
         
@@ -293,6 +296,8 @@ def add_recipe():
         
         popup = tk.Toplevel()
         popup.iconbitmap(icon_path)
+        popup.geometry("360x75")
+        popup.resizable(False, False)
         popup.title("Edit Step")
         
         tk.Label(popup, text="Step").grid(row=0, column=0, padx=5, pady=5)
@@ -336,8 +341,8 @@ def add_recipe():
         else:
             messagebox.showwarning("Error", "Please fill all the entries.")
 
-    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=73)
-    save_button.pack(pady=(20, 15))
+    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=62)
+    save_button.pack(pady=(10, 15))
 
 # Function to delete temporary files
 def clean_temp_files():
@@ -358,7 +363,7 @@ def view_recipe():
     view_window = Toplevel()
     view_window.iconbitmap(icon_path)
     view_window.title("Recipes Displayer")
-    view_window.geometry("400x400")
+    view_window.geometry("480x500")
     view_window.resizable(False, False)
     view_window.configure(bg=beige)
 
@@ -367,7 +372,7 @@ def view_recipe():
     recipe_list_frame = tk.Frame(view_window, bg=beige)
     recipe_list_frame.pack(pady=(10, 10))
 
-    recipe_listbox = tk.Listbox(recipe_list_frame, width=80, height=15)
+    recipe_listbox = tk.Listbox(recipe_list_frame, width=75, height=25)
     recipe_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
 
     scrollbar = tk.Scrollbar(recipe_list_frame)
@@ -383,16 +388,16 @@ def view_recipe():
 
     update_recipe_list()
 
-    def show_selected_recipe():
-        selected_index = recipe_listbox.curselection()
-        if selected_index:
-            selected_recipe_name = recipe_listbox.get(selected_index).split(" - ")[0]  
+    def show_selected_recipe(index):
+        selected_index = recipe_listbox.curselection() 
+        if selected_index:  
+            selected_recipe_name = recipe_listbox.get(selected_index[0]).split(" - ")[0]  
             selected_recipe = recipes[selected_recipe_name]
 
             recipe_detail_window = Toplevel(view_window)
             recipe_detail_window.iconbitmap(icon_path)
             recipe_detail_window.title(selected_recipe_name)
-            recipe_detail_window.geometry("400x400")
+            recipe_detail_window.geometry("640x480")
             recipe_detail_window.configure(bg=beige)
 
             tk.Label(recipe_detail_window, text="Number of people :", bg=beige).pack(pady=(10, 0))
@@ -410,15 +415,15 @@ def view_recipe():
 
             def display_recipe_details():
                 try:
-                    num_people = int(num_people_entry.get())
-        
+                    num_people = int(num_people_entry.get())  # Récupère le nombre de personnes
+
                     ingredients_text = "\n".join(
                         f"{ingredient.split(':')[0]}: {float(ingredient.split(':')[1].split()[0]) * num_people} {ingredient.split(':')[1].split()[1]}"
                         for ingredient in selected_recipe['ingredients']
                     )
-        
+
                     steps_text = "\n".join(selected_recipe['steps'])
-        
+
                     recipe_label.config(text=f"Name: {selected_recipe['name']}\nDifficulty: {selected_recipe['difficulty']}\nPrix: {selected_recipe['price']}\n\nIngredients:\n{ingredients_text}\n\nÉtapes:\n{steps_text}")
                 except ValueError:
                     messagebox.showwarning("Error", "Enter a valid number.")
@@ -434,28 +439,42 @@ def view_recipe():
 
                 if not os.path.exists(im_dir):
                     os.makedirs(im_dir)
-                    
+
                 with open(im_path, "wb") as img_file:
                     img_file.write(img_data)
 
                 img_label = tk.Label(recipe_detail_window, bg=beige)
                 img_label.pack(pady=(10, 10))
 
-                img = tk.PhotoImage(file=im_path)
-                img_label.config(image=img)
-                img_label.image = img  
+                img = Image.open(im_path)
+                img_width, img_height = img.size
+                img_ratio = img_width / img_height
+
+                if img_ratio > 1:  
+                    img = img.resize((300, int(300 / img_ratio))) 
+                else:  # L'image est plus haute ou carrée
+                    img = img.resize((int(500 * img_ratio), 500)) 
+
+                img_tk = ImageTk.PhotoImage(img)
+
+                img_label.config(image=img_tk)
+                img_label.image = img_tk  
 
             close_button = tk.Button(recipe_detail_window, text="Close", command=recipe_detail_window.destroy)
             close_button.pack(pady=(10, 10))
+
             clean_temp_files()
         else:
             messagebox.showwarning("Error", "Please select a recipe.")
 
-    display_button = tk.Button(view_window, text="Display the selected recipe", command=show_selected_recipe)
-    display_button.pack(pady=(10, 10))
+    recipe_listbox.bind('<Double-Button-1>', lambda event: show_selected_recipe(recipe_listbox.curselection()))
 
-    def sort_recipes(by):
-        sorted_recipes = sorted(recipes.items(), key=lambda x: x[1][by])
+    def sort_recipes(by, reverse=False, alphabetical=False):
+        if alphabetical:
+            sorted_recipes = sorted(recipes.items(), key=lambda x: x[0], reverse=reverse)
+        else:
+            sorted_recipes = sorted(recipes.items(), key=lambda x: x[1][by], reverse=reverse)
+
         recipe_listbox.delete(0, tk.END)
         for name, details in sorted_recipes:
             recipe_listbox.insert(tk.END, f"{name} - Difficulty: {details['difficulty']} - Price: {details['price']}")
@@ -463,11 +482,23 @@ def view_recipe():
     sort_frame = tk.Frame(view_window, bg=beige)
     sort_frame.pack(pady=(10, 10))
 
-    difficulty_button = tk.Button(sort_frame, text="Sort by Difficulty", command=lambda: sort_recipes('difficulty'))
-    difficulty_button.pack(side=tk.LEFT, padx=(10, 5))
+    difficulty_asc_button = tk.Button(sort_frame, text="Sort by Difficulty ↑", command=lambda: sort_recipes('difficulty'))
+    difficulty_asc_button.grid(row=0, column=0, padx=(10, 5))
 
-    price_button = tk.Button(sort_frame, text="Sort by Price", command=lambda: sort_recipes('price'))
-    price_button.pack(side=tk.LEFT, padx=(5, 10))
+    difficulty_desc_button = tk.Button(sort_frame, text="Sort by Difficulty ↓", command=lambda: sort_recipes('difficulty', reverse=True))
+    difficulty_desc_button.grid(row=1, column=0, padx=(10, 5))
+
+    price_asc_button = tk.Button(sort_frame, text="Sort by Price ↑", command=lambda: sort_recipes('price'))
+    price_asc_button.grid(row=0, column=1, padx=(10, 5))
+
+    price_desc_button = tk.Button(sort_frame, text="Sort by Price ↓", command=lambda: sort_recipes('price', reverse=True))
+    price_desc_button.grid(row=1, column=1, padx=(10, 5))
+
+    name_asc_button = tk.Button(sort_frame, text="Sort by Name A-Z", command=lambda: sort_recipes(by='name', alphabetical=True))
+    name_asc_button.grid(row=0, column=2, padx=(10, 5))
+
+    name_desc_button = tk.Button(sort_frame, text="Sort by Name Z-A", command=lambda: sort_recipes(by='name', alphabetical=True, reverse=True))
+    name_desc_button.grid(row=1, column=2, padx=(10, 5))
 
 # Main window
 def create_main_window():
@@ -475,7 +506,7 @@ def create_main_window():
     root.iconbitmap(icon_path)
     root.title("Recipe Manager")
     root.configure(bg=beige)
-    root.geometry("800x400") 
+    root.geometry("700x380") 
     root.resizable(False, False)  
 
     label = tk.Label(root, text="Recipe Manager", font=("Calibri", 26, "bold"), bg=beige, fg='black')
