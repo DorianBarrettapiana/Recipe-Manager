@@ -17,18 +17,27 @@ def get_base_path():
         return os.path.dirname(os.path.abspath(__file__))
 
 base_path = get_base_path()
-recipes_dir = os.path.join(base_path, 'recipes') 
-json_path = os.path.join(recipes_dir, 'recipes.json')
 icon_path = os.path.join(base_path, 'resources/Fork_Knife.ico')
 im_dir = os.path.join(base_path, 'temp')
 im_path = os.path.join(base_path, 'temp_image.png')
     
+# Create a folder in the user/username directory
+def get_recipes_directory():
+    user_home = os.path.expanduser("~")  
+    recipes_dir = os.path.join(user_home, 'MyAppRecipes')  
+    return recipes_dir
+
+recipes_dir = get_recipes_directory()  
+json_path = os.path.join(recipes_dir, 'recipes.json')
+
 # Load JSON recipe file, and create it if it doesn't exist
 def load_recipe():
     if not os.path.exists(recipes_dir):
-        os.makedirs(recipes_dir)
+        os.makedirs(recipes_dir)  
+        print(f"Created directory: {recipes_dir}")
 
     if os.path.exists(json_path):
+        print(f"Loading recipes from: {json_path}")
         with open(json_path, 'r') as f:
             try:
                 recipes = json.load(f)
@@ -41,8 +50,9 @@ def load_recipe():
                 messagebox.showerror("Error", "The file is corrupted or invalid.")
                 return {}
     else:
+        print(f"Creating new JSON file at: {json_path}")
         with open(json_path, 'w') as f:
-            empty_recipes = {} 
+            empty_recipes = {}
             json.dump(empty_recipes, f, indent=4)
             messagebox.showinfo("Info", f"File not found, created a new one at: {json_path}")
         return empty_recipes
@@ -178,7 +188,7 @@ def add_recipe():
 
     ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
     ingredient_listbox.grid(row=2, column=0, columnspan=3, padx=(10, 10), pady=(0, 0)) 
-    info_2_label = tk.Label(ingredients_steps_frame, text="Ingredients                   |  Quantity  |   Unit", font=("Calibri", 12), bg=beige, fg='black')
+    info_2_label = tk.Label(ingredients_steps_frame, text="Ingredients                      Quantity      Unit", font=("Calibri", 12), bg=beige, fg='black')
     info_2_label.grid(row=3, column=0, padx=(3, 12), pady=(0, 5), columnspan=3)
     ingredient_entry = tk.Entry(ingredients_steps_frame, width=25)
 
