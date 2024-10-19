@@ -31,3 +31,5 @@ This project is a recipe management application developed in Python using Tkinte
 
    ```bash
    pyinstaller --onedir --windowed --add-data "resources:resources" main.py
+
+#### (An exe file is already packaged in the build folder)
