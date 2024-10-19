@@ -1,1 +1,5 @@
 Build/Config.json
+__pycache__/add_recipe.cpython-312.pyc
+__pycache__/browse_recipe.cpython-312.pyc
+__pycache__/export_import.cpython-312.pyc
+__pycache__/utilities.cpython-312.pyc
