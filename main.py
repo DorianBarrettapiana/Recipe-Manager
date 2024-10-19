@@ -55,10 +55,11 @@ def export_recipe():
 
     export_window = tk.Toplevel()  
     export_window.iconbitmap(icon_path)  
-    export_window.title("Export a recipe")  
+    export_window.title("Export a recipe")
+    export_window.geometry("480x500")
     export_window.resizable(False, False)  
 
-    listbox = tk.Listbox(export_window, width=50, height=10, selectmode=tk.MULTIPLE)
+    listbox = tk.Listbox(export_window, width=75, height=25, selectmode=tk.MULTIPLE)
     listbox.pack(pady=10)
 
     for recipe_name in recipes.keys():
@@ -83,7 +84,7 @@ def export_recipe():
         except tk.TclError:
             messagebox.showwarning("Select a recipe", "Select one or more recipes to export.")
 
-    select_button = tk.Button(export_window, text="Export", command=select_recipe)
+    select_button = tk.Button(export_window, text="Export", font=("Calibri", 12, "bold"), command=select_recipe, width=25)
     select_button.pack(pady=10)
 
 # Import an exported JSON file to add to the database
@@ -129,7 +130,7 @@ def add_recipe():
     recipe_window.iconbitmap(icon_path)
     recipe_window.title("Add a recipe")
     recipe_window.configure(bg=beige) 
-    recipe_window.geometry("700x620") 
+    recipe_window.geometry("700x700") 
     recipe_window.resizable(False, False)
 
     name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg=beige, fg='black')
@@ -171,11 +172,14 @@ def add_recipe():
     ingredients_steps_frame.pack(pady=(2, 25))
 
     ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg=beige, fg='black')
-    ingredient_label.grid(row=0, column=0, padx=(5, 15), pady=(0, 5), columnspan=3)  
+    info_label = tk.Label(ingredients_steps_frame, text="All quantities are for 1 person", font=("Calibri", 9, "bold"), bg=beige, fg='black')
+    ingredient_label.grid(row=0, column=0, padx=(3, 2), pady=(0, 0), columnspan=3)
+    info_label.grid(row=1, column=0, padx=(3, 12), pady=(0, 0), columnspan=3)
 
     ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
-    ingredient_listbox.grid(row=1, column=0, columnspan=3, padx=(10, 10), pady=(0, 10)) 
-
+    ingredient_listbox.grid(row=2, column=0, columnspan=3, padx=(10, 10), pady=(0, 0)) 
+    info_2_label = tk.Label(ingredients_steps_frame, text="Ingredients                   |  Quantity  |   Unit", font=("Calibri", 12), bg=beige, fg='black')
+    info_2_label.grid(row=3, column=0, padx=(3, 12), pady=(0, 5), columnspan=3)
     ingredient_entry = tk.Entry(ingredients_steps_frame, width=25)
 
     def validate_quantity(action, value_if_allowed):
@@ -187,9 +191,9 @@ def add_recipe():
     quantity_entry = tk.Entry(ingredients_steps_frame, width=8, validate='key', validatecommand=vcmd)
     unit_entry = tk.Entry(ingredients_steps_frame, width=8)
 
-    ingredient_entry.grid(row=2, column=0, padx=(0, 2), pady=(0, 5))
-    quantity_entry.grid(row=2, column=1, padx=(0, 2), pady=(0, 5))
-    unit_entry.grid(row=2, column=2, padx=(0, 0), pady=(0, 5))
+    ingredient_entry.grid(row=4, column=0, padx=(0, 2), pady=(0, 5))
+    quantity_entry.grid(row=4, column=1, padx=(0, 2), pady=(0, 5))
+    unit_entry.grid(row=4, column=2, padx=(0, 0), pady=(0, 5))
 
     def add_ingredient():
         ingredient = ingredient_entry.get().strip()
@@ -211,19 +215,19 @@ def add_recipe():
             messagebox.showwarning("Error", "You must select an ingredient.")
 
     add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient, width=37)
-    add_ingredient_button.grid(row=3, column=0, pady=(5, 10), columnspan=3) 
+    add_ingredient_button.grid(row=5, column=0, pady=(5, 10), columnspan=3) 
 
     del_ingredient_button = tk.Button(ingredients_steps_frame, text="Delete the ingredient", font=("Calibri", 12, "bold"), command=del_ingredient, width=37)
-    del_ingredient_button.grid(row=4, column=0, pady=(0, 10), columnspan=3)
+    del_ingredient_button.grid(row=6, column=0, pady=(0, 10), columnspan=3)
 
     step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=beige, fg='black')
     step_label.grid(row=0, column=4, padx=(10, 5), pady=(0, 5))
 
     step_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
-    step_listbox.grid(row=1, column=4, padx=(10, 5), pady=(0, 10))
+    step_listbox.grid(row=2, column=4, padx=(10, 5), pady=(0, 10))
 
     step_entry = tk.Entry(ingredients_steps_frame, width=50)
-    step_entry.grid(row=2, column=4, padx=(10, 5), pady=(0, 5))
+    step_entry.grid(row=4, column=4, padx=(10, 5), pady=(0, 5))
 
     def add_step():
         step = step_entry.get().strip()
@@ -241,10 +245,10 @@ def add_recipe():
             messagebox.showwarning("Error", "You must select a step.")
 
     add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step, width=37)
-    add_step_button.grid(row=3, column=4, pady=(5, 10))
+    add_step_button.grid(row=5, column=4, pady=(5, 10))
 
     del_step_button = tk.Button(ingredients_steps_frame, text="Delete the step", font=("Calibri", 12, "bold"), command=del_step, width=37)
-    del_step_button.grid(row=4, column=4, pady=(0, 10), columnspan=3)
+    del_step_button.grid(row=6, column=4, pady=(0, 10), columnspan=3)
 
     def edit_ingredient_popup(index):
         ingredient_data = ingredient_listbox.get(index)
@@ -363,7 +367,7 @@ def view_recipe():
     view_window = Toplevel()
     view_window.iconbitmap(icon_path)
     view_window.title("Recipes Displayer")
-    view_window.geometry("480x500")
+    view_window.geometry("480x550")
     view_window.resizable(False, False)
     view_window.configure(bg=beige)
 
@@ -372,7 +376,7 @@ def view_recipe():
     recipe_list_frame = tk.Frame(view_window, bg=beige)
     recipe_list_frame.pack(pady=(10, 10))
 
-    recipe_listbox = tk.Listbox(recipe_list_frame, width=75, height=25)
+    recipe_listbox = tk.Listbox(recipe_list_frame, width=75, height=25, selectmode=tk.MULTIPLE)
     recipe_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
 
     scrollbar = tk.Scrollbar(recipe_list_frame)
@@ -388,8 +392,29 @@ def view_recipe():
 
     update_recipe_list()
 
+    def delete_selected_recipes():
+        selected_indices = recipe_listbox.curselection() 
+        if not selected_indices:
+            messagebox.showwarning("Warning", "Please select at least one recipe to delete.")
+            return
+
+        #recipes = load_recipe()
+
+        for index in reversed(selected_indices):  
+            recipe_name = recipe_listbox.get(index).split(" - ")[0]  
+            if recipe_name in recipes:
+                del recipes[recipe_name]
+                update_recipe_list() 
+                #recipe_listbox.delete(index) 
+
+        save_recipes(recipes)
+        messagebox.showinfo("Success", "Selected recipes have been deleted.")
+
+    delete_button = tk.Button(view_window, text="Delete Selected Recipes", command=delete_selected_recipes)
+    delete_button.pack(pady=(10, 10))
+
     def show_selected_recipe(index):
-        selected_index = recipe_listbox.curselection() 
+        selected_index = recipe_listbox.curselection()
         if selected_index:  
             selected_recipe_name = recipe_listbox.get(selected_index[0]).split(" - ")[0]  
             selected_recipe = recipes[selected_recipe_name]
@@ -400,8 +425,10 @@ def view_recipe():
             recipe_detail_window.geometry("640x480")
             recipe_detail_window.configure(bg=beige)
 
-            tk.Label(recipe_detail_window, text="Number of people :", bg=beige).pack(pady=(10, 0))
+            tk.Label(recipe_detail_window, text="Number of people:", bg=beige).pack(pady=(10, 0))
+            
             num_people_entry = tk.Entry(recipe_detail_window)
+            num_people_entry.insert(0, "1") 
             num_people_entry.pack(pady=(0, 10))
 
             def validate_input(char):
@@ -413,26 +440,29 @@ def view_recipe():
             recipe_info_frame = tk.Frame(recipe_detail_window, bg=beige)
             recipe_info_frame.pack(pady=(10, 10))
 
-            def display_recipe_details():
+            recipe_label = tk.Label(recipe_info_frame, bg=beige, fg='black', font=("Calibri", 12))
+            recipe_label.pack(pady=(10, 10))
+
+            def display_recipe_details(num_people):
+                ingredients_text = "\n".join(
+                    f"{ingredient.split(':')[0]}: {float(ingredient.split(':')[1].split()[0]) * num_people} {ingredient.split(':')[1].split()[1]}"
+                    for ingredient in selected_recipe['ingredients']
+                )
+                steps_text = "\n".join(selected_recipe['steps'])
+
+                recipe_label.config(text=f"Name: {selected_recipe['name']}\nDifficulty: {selected_recipe['difficulty']}\nPrix: {selected_recipe['price']}\n\nIngredients:\n{ingredients_text}\n\nÉtapes:\n{steps_text}")
+
+            display_recipe_details(1)
+
+            def update_recipe_details():
                 try:
-                    num_people = int(num_people_entry.get())  # Récupère le nombre de personnes
-
-                    ingredients_text = "\n".join(
-                        f"{ingredient.split(':')[0]}: {float(ingredient.split(':')[1].split()[0]) * num_people} {ingredient.split(':')[1].split()[1]}"
-                        for ingredient in selected_recipe['ingredients']
-                    )
-
-                    steps_text = "\n".join(selected_recipe['steps'])
-
-                    recipe_label.config(text=f"Name: {selected_recipe['name']}\nDifficulty: {selected_recipe['difficulty']}\nPrix: {selected_recipe['price']}\n\nIngredients:\n{ingredients_text}\n\nÉtapes:\n{steps_text}")
+                    num_people = int(num_people_entry.get())
+                    display_recipe_details(num_people) 
                 except ValueError:
                     messagebox.showwarning("Error", "Enter a valid number.")
 
-            show_button = tk.Button(recipe_detail_window, text="Show", command=display_recipe_details)
-            show_button.pack(pady=(10, 10))
-
-            recipe_label = tk.Label(recipe_info_frame, bg=beige, fg='black', font=("Calibri", 12))
-            recipe_label.pack(pady=(10, 10))
+            update_button = tk.Button(recipe_detail_window, text="Update", command=update_recipe_details)
+            update_button.pack(pady=(10, 10))
 
             if selected_recipe.get("image"):
                 img_data = base64.b64decode(selected_recipe["image"])
@@ -452,7 +482,7 @@ def view_recipe():
 
                 if img_ratio > 1:  
                     img = img.resize((300, int(300 / img_ratio))) 
-                else:  # L'image est plus haute ou carrée
+                else:  
                     img = img.resize((int(500 * img_ratio), 500)) 
 
                 img_tk = ImageTk.PhotoImage(img)
