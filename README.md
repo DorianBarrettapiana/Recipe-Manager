@@ -2,7 +2,7 @@
 
 This project is a recipe management application developed in Python using Tkinter for the graphical interface and JSON for data storage. It allows users to create, manage, and import/export to share recipes. The application includes features like ingredient and step management, difficulty and price rating, and encoding images in Base64 format to store them in a JSON file.
 
-![Exemple of usage](temp\Screenshot_recipe_manager.png)
+![Preview of the app](./preview.png)
 
 ## Features
 
