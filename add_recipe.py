@@ -4,34 +4,35 @@ import base64
 from utilities import *
 
 # Add a recipe to the data base
-def add_recipe():
+def add_recipe(root):
     recipe_window = tk.Toplevel()
     recipe_window.iconbitmap(icon_path)
     recipe_window.title("Add a recipe")
-    recipe_window.configure(bg=beige) 
+    recipe_window.configure(bg=black_gray) 
     recipe_window.geometry("700x700") 
     recipe_window.resizable(False, False)
 
-    name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg=beige, fg='black')
-    name_entry = tk.Entry(recipe_window, width=75)
+    name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg=black_gray, fg=beige)
+    name_entry = tk.Entry(recipe_window, width=50)
     name_label.pack(pady=(20, 10))
     name_entry.pack(pady=(0, 20))
 
-    difficulty_price_frame = tk.Frame(recipe_window, bg=beige)
+    difficulty_price_frame = tk.Frame(recipe_window, bg=black_gray)
     difficulty_price_frame.pack(pady=(5, 20))
 
-    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg=beige, fg='black')
+    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg=black_gray, fg=beige)
     difficulty_var = tk.IntVar(value=1)
-    difficulty_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=difficulty_var)
-    difficulty_label.pack(side=tk.LEFT, padx=(0, 25))
-    difficulty_scale.pack(side=tk.LEFT, padx=(0, 20))
+    difficulty_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=difficulty_var, sliderrelief="flat", bg=black_gray, fg=beige)
+    difficulty_label.pack(side=tk.LEFT, padx=(0, 50))
+    difficulty_scale.pack(side=tk.LEFT, padx=(0, 50))
 
-    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg=beige, fg='black')
+    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg=black_gray, fg=beige)
     price_var = tk.IntVar(value=1)
-    price_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=price_var)
-    price_label.pack(side=tk.LEFT, padx=(0, 25))
-    price_scale.pack(side=tk.LEFT, padx=(0, 20))
+    price_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=price_var, sliderrelief="flat", bg=black_gray, fg=beige)
+    price_label.pack(side=tk.LEFT, padx=(0, 50))
+    price_scale.pack(side=tk.LEFT, padx=(0, 50))
 
+    # Add an image to the JSON and encode it in base64
     def upload_image():
         file_path = filedialog.askopenfilename(title="Select a photo", filetypes=[("Image Files", "*.png;*.jpg;*.jpeg")])
         if file_path:
@@ -42,22 +43,24 @@ def add_recipe():
 
     current_recipe = {}
     
-    image_button = tk.Button(recipe_window, text="Add a photo", font=("Calibri", 12, "bold"), command=upload_image, width=22)
+    image_button = tk.Button(recipe_window, text="Add a photo", font=("Calibri", 12, "bold"), command=upload_image, width=22, **button_style_2)
+    image_button.bind("<Enter>", on_enter)
+    image_button.bind("<Leave>", on_leave)
     image_button.pack(pady=(5, 5))
-    image_label = tk.Label(recipe_window, text="", bg=beige, fg='black')
+    image_label = tk.Label(recipe_window, text="", bg=black_gray, fg=beige)
     image_label.pack(pady=(0, 10))
 
-    ingredients_steps_frame = tk.Frame(recipe_window, bg=beige)
+    ingredients_steps_frame = tk.Frame(recipe_window, bg=black_gray)
     ingredients_steps_frame.pack(pady=(2, 25))
 
-    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg=beige, fg='black')
-    info_label = tk.Label(ingredients_steps_frame, text="All quantities are for 1 person", font=("Calibri", 9, "bold"), bg=beige, fg='black')
+    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige)
+    info_label = tk.Label(ingredients_steps_frame, text="All quantities are for 1 person", font=("Calibri", 9, "bold"), bg=black_gray, fg=beige)
     ingredient_label.grid(row=0, column=0, padx=(3, 2), pady=(0, 0), columnspan=3)
     info_label.grid(row=1, column=0, padx=(3, 12), pady=(0, 0), columnspan=3)
 
-    ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
+    ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=10, width=50, **listbox_style_2)
     ingredient_listbox.grid(row=2, column=0, columnspan=3, padx=(10, 10), pady=(0, 0)) 
-    info_2_label = tk.Label(ingredients_steps_frame, text="Ingredients                      Quantity      Unit", font=("Calibri", 12), bg=beige, fg='black')
+    info_2_label = tk.Label(ingredients_steps_frame, text="         Ingredient                Quantity         Unit", font=("Calibri", 12), bg=black_gray, fg=beige)
     info_2_label.grid(row=3, column=0, padx=(3, 12), pady=(0, 5), columnspan=3)
     ingredient_entry = tk.Entry(ingredients_steps_frame, width=25)
 
@@ -90,20 +93,24 @@ def add_recipe():
         ingredient = ingredient_listbox.curselection()
         if ingredient:
             ingredient_listbox.delete(0)
-        else:
-            messagebox.showwarning("Error", "You must select an ingredient.")
+        #else:
+            # messagebox.showwarning("Error", "You must select an ingredient.")
 
-    add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient, width=37)
+    add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient, width=37, **button_style_2)
+    add_ingredient_button.bind("<Enter>", on_enter)
+    add_ingredient_button.bind("<Leave>", on_leave)
     add_ingredient_button.grid(row=5, column=0, pady=(5, 10), columnspan=3) 
 
-    del_ingredient_button = tk.Button(ingredients_steps_frame, text="Delete the ingredient", font=("Calibri", 12, "bold"), command=del_ingredient, width=37)
+    del_ingredient_button = tk.Button(ingredients_steps_frame, text="Delete the ingredient", font=("Calibri", 12, "bold"), command=del_ingredient, width=37, **button_style_2)
+    del_ingredient_button.bind("<Enter>", on_enter)
+    del_ingredient_button.bind("<Leave>", on_leave)
     del_ingredient_button.grid(row=6, column=0, pady=(0, 10), columnspan=3)
 
-    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=beige, fg='black')
+    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige)
     step_label.grid(row=0, column=4, padx=(10, 5), pady=(0, 5))
 
-    step_listbox = tk.Listbox(ingredients_steps_frame, height=7, width=50)
-    step_listbox.grid(row=2, column=4, padx=(10, 5), pady=(0, 10))
+    step_listbox = tk.Listbox(ingredients_steps_frame, height=10, width=50, **listbox_style_2)
+    step_listbox.grid(row=2, column=4, padx=(10, 5), pady=(0, 0))
 
     step_entry = tk.Entry(ingredients_steps_frame, width=50)
     step_entry.grid(row=4, column=4, padx=(10, 5), pady=(0, 5))
@@ -120,15 +127,20 @@ def add_recipe():
         selected = step_listbox.curselection()
         if selected:
             step_listbox.delete(0)
-        else:
-            messagebox.showwarning("Error", "You must select a step.")
+        #else:
+            #messagebox.showwarning("Error", "You must select a step.")
 
-    add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step, width=37)
+    add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step, width=37, **button_style_2)
+    add_step_button.bind("<Enter>", on_enter)
+    add_step_button.bind("<Leave>", on_leave)
     add_step_button.grid(row=5, column=4, pady=(5, 10))
 
-    del_step_button = tk.Button(ingredients_steps_frame, text="Delete the step", font=("Calibri", 12, "bold"), command=del_step, width=37)
+    del_step_button = tk.Button(ingredients_steps_frame, text="Delete the step", font=("Calibri", 12, "bold"), command=del_step, width=37, **button_style_2)
+    del_step_button.bind("<Enter>", on_enter)
+    del_step_button.bind("<Leave>", on_leave)
     del_step_button.grid(row=6, column=4, pady=(0, 10), columnspan=3)
 
+    # Edit the ingredient when double click
     def edit_ingredient_popup(index):
         ingredient_data = ingredient_listbox.get(index)
         
@@ -140,22 +152,23 @@ def add_recipe():
         
         popup = tk.Toplevel()
         popup.iconbitmap(icon_path)
-        popup.geometry("240x140")
+        popup.geometry("280x140")
+        popup.configure(bg=beige)
         popup.resizable(False, False)
         popup.title("Edit Ingredient")
         
-        tk.Label(popup, text="Ingredient").grid(row=0, column=0, padx=5, pady=5)
-        ingredient_name_entry = tk.Entry(popup, width=25)
+        tk.Label(popup, text="Ingredient", bg=beige, font = ("Calibri", 10, "bold")).grid(row=0, column=0, padx=5, pady=5)
+        ingredient_name_entry = tk.Entry(popup, width=25, bg=beige, font = ("Calibri", 10, "bold"))
         ingredient_name_entry.grid(row=0, column=1, padx=5, pady=5)
         ingredient_name_entry.insert(0, name_part)
         
-        tk.Label(popup, text="Quantity").grid(row=1, column=0, padx=5, pady=5)
-        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd)
+        tk.Label(popup, text="Quantity", bg=beige, font = ("Calibri", 10, "bold")).grid(row=1, column=0, padx=5, pady=5)
+        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd, bg=beige, font = ("Calibri", 10, "bold"))
         ingredient_quantity_entry.grid(row=1, column=1, padx=5, pady=5)
         ingredient_quantity_entry.insert(0, quantity_part)
         
-        tk.Label(popup, text="Unit").grid(row=2, column=0, padx=5, pady=5)
-        ingredient_unit_entry = tk.Entry(popup, width=10)
+        tk.Label(popup, text="Unit", bg=beige, font = ("Calibri", 10, "bold")).grid(row=2, column=0, padx=5, pady=5)
+        ingredient_unit_entry = tk.Entry(popup, width=10, bg=beige, font = ("Calibri", 10, "bold"))
         ingredient_unit_entry.grid(row=2, column=1, padx=5, pady=5)
         ingredient_unit_entry.insert(0, unit_part)
         
@@ -171,20 +184,24 @@ def add_recipe():
             else:
                 messagebox.showwarning("Error", "All fields must be filled.")
         
-        save_button = tk.Button(popup, text="Save", command=save_ingredient)
-        save_button.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+        save_button = tk.Button(popup, text="Save", command=save_ingredient, **button_style_mini)
+        save_button.bind("<Enter>", on_enter)
+        save_button.bind("<Leave>", on_leave)
+        save_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
 
+    # Edit the step when double click
     def edit_step_popup(index):
         step_data = step_listbox.get(index)
         
         popup = tk.Toplevel()
         popup.iconbitmap(icon_path)
         popup.geometry("360x75")
+        popup.configure(bg=beige)
         popup.resizable(False, False)
         popup.title("Edit Step")
         
-        tk.Label(popup, text="Step").grid(row=0, column=0, padx=5, pady=5)
-        step_entry_popup = tk.Entry(popup, width=50)
+        tk.Label(popup, text="Step", bg=beige, font = ("Calibri", 10, "bold")).grid(row=0, column=0, padx=5, pady=5)
+        step_entry_popup = tk.Entry(popup, width=50, bg=beige, font = ("Calibri", 10, "bold"))
         step_entry_popup.grid(row=0, column=1, padx=5, pady=5)
         step_entry_popup.insert(0, step_data)
         
@@ -197,12 +214,15 @@ def add_recipe():
             else:
                 messagebox.showwarning("Error", "Step cannot be empty.")
         
-        save_button = tk.Button(popup, text="Save", command=save_step)
-        save_button.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+        save_button = tk.Button(popup, text="Save", command=save_step, **button_style_mini)
+        save_button.bind("<Enter>", on_enter)
+        save_button.bind("<Leave>", on_leave)
+        save_button.grid(row=1, column=0, columnspan=2, padx=5, pady=10)
 
     ingredient_listbox.bind('<Double-Button-1>', lambda event: edit_ingredient_popup(ingredient_listbox.curselection()[0]))
     step_listbox.bind('<Double-Button-1>', lambda event: edit_step_popup(step_listbox.curselection()[0]))
 
+    # Save the recipe with the right format in the JSON
     def save_recipe():
         recipes = load_recipe()
         recipe_name = name_entry.get().strip()
@@ -224,5 +244,7 @@ def add_recipe():
         else:
             messagebox.showwarning("Error", "Please fill all the entries.")
 
-    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=62)
-    save_button.pack(pady=(10, 15))
+    save_button = tk.Button(recipe_window, text="Save the recipe", font=("Calibri", 14, "bold"), command=save_recipe, width=62, **button_style_2)
+    save_button.bind("<Enter>", on_enter)
+    save_button.bind("<Leave>", on_leave)
+    save_button.pack(pady=(10, 10))
