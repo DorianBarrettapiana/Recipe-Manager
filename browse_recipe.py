@@ -88,6 +88,8 @@ def view_recipe(root):
     delete_button.bind("<Leave>", on_leave)
     canvas.create_window(240, 385, window=delete_button)
 
+    recipe_listbox.bind("<Delete>", lambda event: delete_selected_recipes())
+
     def show_selected_recipe():
         selected_index = recipe_listbox.curselection()
         if selected_index:  
@@ -157,6 +159,8 @@ def view_recipe(root):
             update_button.bind("<Enter>", on_enter)
             update_button.bind("<Leave>", on_leave)
             canvas.create_window(466, 50, window=update_button)
+
+            num_people_entry.bind("<Return>", lambda event: update_recipe_details())
 
             if selected_recipe.get("image"):
                 img_data = base64.b64decode(selected_recipe["image"])

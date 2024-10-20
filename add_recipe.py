@@ -90,21 +90,28 @@ def add_recipe(root):
             messagebox.showwarning("Error", "Please fill all the entries.")
 
     def del_ingredient():
-        ingredient = ingredient_listbox.curselection()
-        if ingredient:
-            ingredient_listbox.delete(0)
-        #else:
-            # messagebox.showwarning("Error", "You must select an ingredient.")
+        selected = ingredient_listbox.curselection()
+        if selected:
+            for index in reversed(selected):  
+                ingredient_listbox.delete(index)
 
     add_ingredient_button = tk.Button(ingredients_steps_frame, text="Add the ingredient", font=("Calibri", 12, "bold"), command=add_ingredient, width=37, **button_style_2)
     add_ingredient_button.bind("<Enter>", on_enter)
     add_ingredient_button.bind("<Leave>", on_leave)
     add_ingredient_button.grid(row=5, column=0, pady=(5, 10), columnspan=3) 
 
+    # Add ingredient by pressing Enter
+    ingredient_entry.bind("<Return>", lambda event: add_ingredient())
+    quantity_entry.bind("<Return>", lambda event: add_ingredient())
+    unit_entry.bind("<Return>", lambda event: add_ingredient())
+
+
     del_ingredient_button = tk.Button(ingredients_steps_frame, text="Delete the ingredient", font=("Calibri", 12, "bold"), command=del_ingredient, width=37, **button_style_2)
     del_ingredient_button.bind("<Enter>", on_enter)
     del_ingredient_button.bind("<Leave>", on_leave)
     del_ingredient_button.grid(row=6, column=0, pady=(0, 10), columnspan=3)
+
+    ingredient_listbox.bind("<Delete>", lambda event: del_ingredient())
 
     step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige, relief="flat")
     step_label.grid(row=0, column=4, padx=(10, 5), pady=(0, 5))
@@ -124,21 +131,24 @@ def add_recipe(root):
             messagebox.showwarning("Error", "Please add a description for the step.")
 
     def del_step():
-        selected = step_listbox.curselection()
+        selected = step_listbox.curselection()  
         if selected:
-            step_listbox.delete(0)
-        #else:
-            #messagebox.showwarning("Error", "You must select a step.")
+            for index in reversed(selected):  
+                step_listbox.delete(index)
 
     add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step, width=37, **button_style_2)
     add_step_button.bind("<Enter>", on_enter)
     add_step_button.bind("<Leave>", on_leave)
     add_step_button.grid(row=5, column=4, padx=(10, 5), pady=(5, 10))
 
+    step_entry.bind("<Return>", lambda event: add_step())
+
     del_step_button = tk.Button(ingredients_steps_frame, text="Delete the step", font=("Calibri", 12, "bold"), command=del_step, width=37, **button_style_2)
     del_step_button.bind("<Enter>", on_enter)
     del_step_button.bind("<Leave>", on_leave)
     del_step_button.grid(row=6, column=4, padx=(10, 5), pady=(0, 10), columnspan=3)
+
+    step_listbox.bind("<Delete>", lambda event: del_step())
 
     # Edit the ingredient when double click
     def edit_ingredient_popup(index):
@@ -189,6 +199,10 @@ def add_recipe(root):
         save_button.bind("<Leave>", on_leave)
         save_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
 
+        ingredient_name_entry.bind("<Return>", lambda event: save_ingredient())
+        ingredient_quantity_entry.bind("<Return>", lambda event: save_ingredient())
+        ingredient_unit_entry.bind("<Return>", lambda event: save_ingredient())
+
     # Edit the step when double click
     def edit_step_popup(index):
         step_data = step_listbox.get(index)
@@ -221,8 +235,52 @@ def add_recipe(root):
         save_button.bind("<Leave>", on_leave)
         save_button.grid(row=1, column=0, columnspan=2, padx=5, pady=10)
 
-    ingredient_listbox.bind('<Double-Button-1>', lambda event: edit_ingredient_popup(ingredient_listbox.curselection()[0]))
-    step_listbox.bind('<Double-Button-1>', lambda event: edit_step_popup(step_listbox.curselection()[0]))
+        step_entry_popup.bind("<Return>", lambda event: save_step())
+
+    # Managing single, double click and ctrl click 
+    def on_single_click_ingredient(event):
+        index = ingredient_listbox.nearest(event.y)  
+        if index >= 0:
+            if event.state & 0x0004: 
+                if index in ingredient_listbox.curselection():
+                    ingredient_listbox.selection_clear(index)
+                else:
+                    ingredient_listbox.selection_set(index)
+            else:
+                ingredient_listbox.selection_clear(0, tk.END) 
+                ingredient_listbox.selection_set(index)  
+
+    def on_double_click_ingredient(event):
+        index = ingredient_listbox.nearest(event.y) 
+        if index >= 0:
+            ingredient_listbox.selection_clear(0, tk.END) 
+            ingredient_listbox.selection_set(index)  
+            edit_ingredient_popup(index)
+
+    ingredient_listbox.bind("<Button-1>", lambda event: root.after(0, on_single_click_ingredient, event))
+    ingredient_listbox.bind("<Double-Button-1>", on_double_click_ingredient)
+
+    def on_single_click_step(event):
+        index = step_listbox.nearest(event.y)  
+        if index >= 0:
+            if event.state & 0x0004: 
+                if index in step_listbox.curselection():
+                    step_listbox.selection_clear(index)
+                else:
+                    step_listbox.selection_set(index)
+            else:
+                step_listbox.selection_clear(0, tk.END) 
+                step_listbox.selection_set(index)  
+
+    def on_double_click_step(event):
+        index = step_listbox.nearest(event.y) 
+        if index >= 0:
+            step_listbox.selection_clear(0, tk.END) 
+            step_listbox.selection_set(index)  
+            edit_step_popup(index)
+
+    step_listbox.bind("<Button-1>", lambda event: root.after(0, on_single_click_step, event))
+    step_listbox.bind("<Double-Button-1>", on_double_click_step)
 
     # Save the recipe with the right format in the JSON
     def save_recipe():
