@@ -19,7 +19,7 @@ def export_recipe(root):
     export_window.transient(root)
     export_window.grab_set()
 
-    canvas = tk.Canvas(export_window, width=480, height=380)
+    canvas = tk.Canvas(export_window, width=480, height=380, relief="flat")
     canvas.pack(fill="both", expand=True)
 
     color1 = hex_to_rgb(black_gray)  
@@ -28,7 +28,7 @@ def export_recipe(root):
     canvas.update()
     create_gradient(canvas, color1, color2)
     
-    frame = tk.Frame(canvas)
+    frame = tk.Frame(canvas, relief="flat")
     frame.place(x=15, y=16, width=450, height=280)
 
     listbox = tk.Listbox(frame, width=53, height=20, **listbox_style)
@@ -57,7 +57,7 @@ def export_recipe(root):
     listbox.bind("<Button-1>", lambda event: root.after(0, on_single_click, event))
     listbox.bind("<Double-Button-1>", on_double_click)
 
-    scrollbar = tk.Scrollbar(frame)
+    scrollbar = tk.Scrollbar(frame, relief="flat")
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     listbox.config(yscrollcommand=scrollbar.set)
     scrollbar.config(command=listbox.yview)

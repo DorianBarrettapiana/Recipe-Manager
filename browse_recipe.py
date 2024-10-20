@@ -17,7 +17,7 @@ def view_recipe(root):
     view_window.transient(root)
     view_window.grab_set()
 
-    canvas = tk.Canvas(view_window, width=480, height=420)
+    canvas = tk.Canvas(view_window, width=480, height=420, relief="flat")
     canvas.pack(fill="both", expand=True)
 
     color1 = hex_to_rgb(black_gray)
@@ -28,7 +28,7 @@ def view_recipe(root):
 
     recipes = load_recipe()
 
-    frame = tk.Frame(canvas)
+    frame = tk.Frame(canvas, relief="flat")
     frame.place(x=15, y=16, width=450, height=280)
 
     recipe_listbox = tk.Listbox(frame, width=54, height=10, **listbox_style)
@@ -56,7 +56,7 @@ def view_recipe(root):
     recipe_listbox.bind("<Button-1>", lambda event: root.after(0, on_single_click, event))
     recipe_listbox.bind("<Double-Button-1>", on_double_click)
 
-    scrollbar = tk.Scrollbar(frame)
+    scrollbar = tk.Scrollbar(frame, relief="flat")
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     recipe_listbox.config(yscrollcommand=scrollbar.set)
     scrollbar.config(command=recipe_listbox.yview)
@@ -100,7 +100,7 @@ def view_recipe(root):
             recipe_detail_window.geometry("800x800")
             recipe_detail_window.resizable(False, False)
 
-            canvas = tk.Canvas(recipe_detail_window, width=800, height=800)
+            canvas = tk.Canvas(recipe_detail_window, width=800, height=800, relief="flat")
             canvas.pack(fill="both", expand=True)
 
             color1 = hex_to_rgb(black_gray)
@@ -109,10 +109,9 @@ def view_recipe(root):
             canvas.update()
             create_gradient(canvas, color1, color2)
 
-            # Numéro de personnes au centre en haut
             canvas.create_text(400, 25, text="Number of People", font=("Calibri", 12, "bold"), fill=beige)
             
-            num_people_entry = tk.Entry(canvas, width=6, justify="center", bg=beige)
+            num_people_entry = tk.Entry(canvas, width=6, justify="center", bg=beige, relief="flat")
             num_people_entry.insert(0, "1") 
             canvas.create_window(400, 50, window=num_people_entry)
 
@@ -122,29 +121,24 @@ def view_recipe(root):
             validate_command = recipe_detail_window.register(validate_input)  
             num_people_entry.config(validate="key", validatecommand=(validate_command, '%S'))
 
-           # Cadre pour afficher les détails de la recette avec scrollbar
-            recipe_canvas = tk.Canvas(recipe_detail_window, bg=beige)
-            recipe_canvas.place(x=15, y=75, width=755, height=400)  # Fixe la taille du canvas pour le contenu de la recette
+            recipe_canvas = tk.Canvas(recipe_detail_window, bg=beige, relief="flat")
+            recipe_canvas.place(x=15, y=75, width=755, height=400)  
 
-            v_scrollbar = tk.Scrollbar(recipe_detail_window, orient="vertical", command=recipe_canvas.yview)
-            v_scrollbar.place(x=770, y=75, height=400)  # Position de la scrollbar verticale
+            v_scrollbar = tk.Scrollbar(recipe_detail_window, orient="vertical", command=recipe_canvas.yview, relief="flat")
+            v_scrollbar.place(x=770, y=75, height=400)  
 
             recipe_canvas.configure(yscrollcommand=v_scrollbar.set)
 
-            recipe_info_frame = tk.Frame(recipe_canvas, bg=beige)
+            recipe_info_frame = tk.Frame(recipe_canvas, bg=beige, relief="flat")
             recipe_canvas.create_window((0, 0), window=recipe_info_frame, anchor="nw")
 
-            # Mise à jour du canvas quand le cadre change de taille
             def on_frame_configure(event):
                 recipe_canvas.configure(scrollregion=recipe_canvas.bbox("all"))
 
             recipe_info_frame.bind("<Configure>", on_frame_configure)
 
-            # Zone de texte pour les détails de la recette avec retour à la ligne
-            recipe_text = tk.Text(recipe_info_frame, width=755, height=400, padx=10, pady=10, bg=beige, fg=black_gray, font=("Calibri", 12), wrap="word")
-            recipe_text.pack(fill="both", expand=True, anchor="nw")  # Remplissage, marges, et alignement en haut à gauche
-
-            # Attachement des scrollbars à la zone de texte
+            recipe_text = tk.Text(recipe_info_frame, width=755, height=400, padx=10, pady=10, bg=beige, fg=black_gray, font=("Calibri", 12), wrap="word", relief="flat")
+            recipe_text.pack(fill="both", expand=True, anchor="nw") 
             v_scrollbar.config(command=recipe_text.yview)
             recipe_text.config(yscrollcommand=v_scrollbar.set)
 
@@ -155,9 +149,8 @@ def view_recipe(root):
                 )
                 steps_text = "\n".join(selected_recipe['steps'])
 
-                # On efface le texte existant avant d'afficher les nouveaux détails
                 recipe_text.delete(1.0, tk.END)
-                recipe_text.insert(tk.END, f"Name: {selected_recipe['name']}\nDifficulty: {selected_recipe['difficulty']}\nPrix: {selected_recipe['price']}\n\nIngredients:\n{ingredients_text}\n\nÉtapes:\n{steps_text}")
+                recipe_text.insert(tk.END, f"{selected_recipe['name']}\nDifficulty: {selected_recipe['difficulty']}\nPrice: {selected_recipe['price']}\n\nIngredients:\n{ingredients_text}\n\nSteps:\n{steps_text}")
 
             display_recipe_details(1)
 
@@ -168,13 +161,11 @@ def view_recipe(root):
                 except ValueError:
                     messagebox.showwarning("Error", "Enter a valid number.")
 
-            # Bouton pour mettre à jour les détails de la recette en fonction du nombre de personnes
             update_button = tk.Button(canvas, text="Update", **button_style_mini, command=update_recipe_details)
             update_button.bind("<Enter>", on_enter)
             update_button.bind("<Leave>", on_leave)
             canvas.create_window(466, 50, window=update_button)
 
-            # Si une image est présente, on l'affiche en bas sous le cadre de recette
             if selected_recipe.get("image"):
                 img_data = base64.b64decode(selected_recipe["image"])
 
@@ -184,33 +175,30 @@ def view_recipe(root):
                 with open(im_path, "wb") as img_file:
                     img_file.write(img_data)
 
-                # Label pour l'image en dessous du cadre de la recette
-                img_label = tk.Label(canvas, bg=beige)
-                img_label.pack(side="bottom", pady=(20, 20))  # Aligné en bas avec une marge
+                img_label = tk.Label(canvas, bg=beige, relief="flat")
+                img_label.pack(side="bottom", pady=(20, 20))  
 
                 img = Image.open(im_path)
                 img_width, img_height = img.size
                 img_ratio = img_width / img_height
 
                 if img_ratio > 1:  
-                    # Si l'image est plus large que haute, ajustez la largeur en fonction de la hauteur de 270
-                    img = img.resize((int(282 * img_ratio), 282))  # Ajustement taille horizontale
+                    img = img.resize((int(282 * img_ratio), 282))  
                 else:  
-                    # Si l'image est plus haute que large, ajustez la largeur pour maintenir le rapport d'aspect
-                    img = img.resize((int(282 * img_ratio), 282))  # Ajustement taille verticale
+                    img = img.resize((int(282 * img_ratio), 282))  
 
                 img_tk = ImageTk.PhotoImage(img)
 
                 img_label.config(image=img_tk)
-                img_label.image = img_tk  # Nécessaire pour éviter la suppression de l'image
+                img_label.image = img_tk  
             else:
                 canvas.create_text(400, 642, text="No image found", font=("Calibri", 26, "bold"), fill=beige)
 
-            clean_temp_files()  # Vérifie que cette fonction existe et fait ce que tu veux
+            clean_temp_files()  
         else:
             messagebox.showwarning("Error", "Please select a recipe.")
 
-    recipe_listbox.bind('<Double-Button-1>', lambda event:show_selected_recipe())#recipe_listbox.curselection()))
+    recipe_listbox.bind('<Double-Button-1>', lambda event:show_selected_recipe())
 
     def sort_recipes(by, reverse=False, alphabetical=False):
         if alphabetical:

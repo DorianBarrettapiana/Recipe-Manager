@@ -12,21 +12,21 @@ def add_recipe(root):
     recipe_window.geometry("700x700") 
     recipe_window.resizable(False, False)
 
-    name_label = tk.Label(recipe_window, text="Recipe's Name", font=("Calibri", 18, "bold"), bg=black_gray, fg=beige)
-    name_entry = tk.Entry(recipe_window, width=50)
+    name_label = tk.Label(recipe_window, text="Name", font=("Calibri", 18, "bold"), bg=black_gray, fg=beige, relief="flat")
+    name_entry = tk.Entry(recipe_window, width=50, relief="flat")
     name_label.pack(pady=(20, 10))
     name_entry.pack(pady=(0, 20))
 
-    difficulty_price_frame = tk.Frame(recipe_window, bg=black_gray)
+    difficulty_price_frame = tk.Frame(recipe_window, bg=black_gray, relief="flat")
     difficulty_price_frame.pack(pady=(5, 20))
 
-    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg=black_gray, fg=beige)
+    difficulty_label = tk.Label(difficulty_price_frame, text="Difficulty", font=("Calibri", 12, "bold"), bg=black_gray, fg=beige, relief="flat")
     difficulty_var = tk.IntVar(value=1)
     difficulty_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=difficulty_var, sliderrelief="flat", bg=black_gray, fg=beige)
     difficulty_label.pack(side=tk.LEFT, padx=(0, 50))
     difficulty_scale.pack(side=tk.LEFT, padx=(0, 50))
 
-    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg=black_gray, fg=beige)
+    price_label = tk.Label(difficulty_price_frame, text="Price", font=("Calibri", 12, "bold"), bg=black_gray, fg=beige, relief="flat")
     price_var = tk.IntVar(value=1)
     price_scale = tk.Scale(difficulty_price_frame, from_=1, to=5, orient=tk.HORIZONTAL, variable=price_var, sliderrelief="flat", bg=black_gray, fg=beige)
     price_label.pack(side=tk.LEFT, padx=(0, 50))
@@ -47,22 +47,22 @@ def add_recipe(root):
     image_button.bind("<Enter>", on_enter)
     image_button.bind("<Leave>", on_leave)
     image_button.pack(pady=(5, 5))
-    image_label = tk.Label(recipe_window, text="", bg=black_gray, fg=beige)
+    image_label = tk.Label(recipe_window, text="", bg=black_gray, fg=beige, relief="flat")
     image_label.pack(pady=(0, 10))
 
     ingredients_steps_frame = tk.Frame(recipe_window, bg=black_gray)
     ingredients_steps_frame.pack(pady=(2, 25))
 
-    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige)
-    info_label = tk.Label(ingredients_steps_frame, text="All quantities are for 1 person", font=("Calibri", 9, "bold"), bg=black_gray, fg=beige)
+    ingredient_label = tk.Label(ingredients_steps_frame, text="Ingredients", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige, relief="flat")
+    info_label = tk.Label(ingredients_steps_frame, text="All quantities are for 1 person", font=("Calibri", 9, "bold"), bg=black_gray, fg=beige, relief="flat")
     ingredient_label.grid(row=0, column=0, padx=(3, 2), pady=(0, 0), columnspan=3)
     info_label.grid(row=1, column=0, padx=(3, 12), pady=(0, 0), columnspan=3)
 
     ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=10, width=50, **listbox_style_2)
     ingredient_listbox.grid(row=2, column=0, columnspan=3, padx=(10, 10), pady=(0, 0)) 
-    info_2_label = tk.Label(ingredients_steps_frame, text="         Ingredient                Quantity         Unit", font=("Calibri", 12), bg=black_gray, fg=beige)
+    info_2_label = tk.Label(ingredients_steps_frame, text="         Ingredient                Quantity         Unit", font=("Calibri", 12), bg=black_gray, fg=beige, relief="flat")
     info_2_label.grid(row=3, column=0, padx=(3, 12), pady=(0, 5), columnspan=3)
-    ingredient_entry = tk.Entry(ingredients_steps_frame, width=25)
+    ingredient_entry = tk.Entry(ingredients_steps_frame, width=25, relief="flat")
 
     def validate_quantity(action, value_if_allowed):
         if action == '1':  
@@ -70,8 +70,8 @@ def add_recipe(root):
         return True
 
     vcmd = (recipe_window.register(validate_quantity), '%d', '%P')
-    quantity_entry = tk.Entry(ingredients_steps_frame, width=8, validate='key', validatecommand=vcmd)
-    unit_entry = tk.Entry(ingredients_steps_frame, width=8)
+    quantity_entry = tk.Entry(ingredients_steps_frame, width=8, validate='key', validatecommand=vcmd, relief="flat")
+    unit_entry = tk.Entry(ingredients_steps_frame, width=8, relief="flat")
 
     ingredient_entry.grid(row=4, column=0, padx=(0, 2), pady=(0, 5))
     quantity_entry.grid(row=4, column=1, padx=(0, 2), pady=(0, 5))
@@ -106,19 +106,19 @@ def add_recipe(root):
     del_ingredient_button.bind("<Leave>", on_leave)
     del_ingredient_button.grid(row=6, column=0, pady=(0, 10), columnspan=3)
 
-    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige)
+    step_label = tk.Label(ingredients_steps_frame, text="Steps", font=("Calibri", 15, "bold"), bg=black_gray, fg=beige, relief="flat")
     step_label.grid(row=0, column=4, padx=(10, 5), pady=(0, 5))
 
     step_listbox = tk.Listbox(ingredients_steps_frame, height=10, width=50, **listbox_style_2)
     step_listbox.grid(row=2, column=4, padx=(10, 5), pady=(0, 0))
 
-    step_entry = tk.Entry(ingredients_steps_frame, width=50)
+    step_entry = tk.Entry(ingredients_steps_frame, width=50, relief="flat")
     step_entry.grid(row=4, column=4, padx=(10, 5), pady=(0, 5))
 
     def add_step():
         step = step_entry.get().strip()
         if step:
-            step_listbox.insert(tk.END, step)
+            step_listbox.insert(tk.END, f"- {step}")
             step_entry.delete(0, tk.END)
         else:
             messagebox.showwarning("Error", "Please add a description for the step.")
@@ -133,12 +133,12 @@ def add_recipe(root):
     add_step_button = tk.Button(ingredients_steps_frame, text="Add the step", font=("Calibri", 12, "bold"), command=add_step, width=37, **button_style_2)
     add_step_button.bind("<Enter>", on_enter)
     add_step_button.bind("<Leave>", on_leave)
-    add_step_button.grid(row=5, column=4, pady=(5, 10))
+    add_step_button.grid(row=5, column=4, padx=(10, 5), pady=(5, 10))
 
     del_step_button = tk.Button(ingredients_steps_frame, text="Delete the step", font=("Calibri", 12, "bold"), command=del_step, width=37, **button_style_2)
     del_step_button.bind("<Enter>", on_enter)
     del_step_button.bind("<Leave>", on_leave)
-    del_step_button.grid(row=6, column=4, pady=(0, 10), columnspan=3)
+    del_step_button.grid(row=6, column=4, padx=(10, 5), pady=(0, 10), columnspan=3)
 
     # Edit the ingredient when double click
     def edit_ingredient_popup(index):
@@ -157,18 +157,18 @@ def add_recipe(root):
         popup.resizable(False, False)
         popup.title("Edit Ingredient")
         
-        tk.Label(popup, text="Ingredient", bg=beige, font = ("Calibri", 10, "bold")).grid(row=0, column=0, padx=5, pady=5)
-        ingredient_name_entry = tk.Entry(popup, width=25, bg=beige, font = ("Calibri", 10, "bold"))
+        tk.Label(popup, text="Ingredient", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=0, column=0, padx=5, pady=5)
+        ingredient_name_entry = tk.Entry(popup, width=25, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
         ingredient_name_entry.grid(row=0, column=1, padx=5, pady=5)
         ingredient_name_entry.insert(0, name_part)
         
-        tk.Label(popup, text="Quantity", bg=beige, font = ("Calibri", 10, "bold")).grid(row=1, column=0, padx=5, pady=5)
-        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd, bg=beige, font = ("Calibri", 10, "bold"))
+        tk.Label(popup, text="Quantity", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=1, column=0, padx=5, pady=5)
+        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
         ingredient_quantity_entry.grid(row=1, column=1, padx=5, pady=5)
         ingredient_quantity_entry.insert(0, quantity_part)
         
-        tk.Label(popup, text="Unit", bg=beige, font = ("Calibri", 10, "bold")).grid(row=2, column=0, padx=5, pady=5)
-        ingredient_unit_entry = tk.Entry(popup, width=10, bg=beige, font = ("Calibri", 10, "bold"))
+        tk.Label(popup, text="Unit", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=2, column=0, padx=5, pady=5)
+        ingredient_unit_entry = tk.Entry(popup, width=10, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
         ingredient_unit_entry.grid(row=2, column=1, padx=5, pady=5)
         ingredient_unit_entry.insert(0, unit_part)
         
@@ -200,8 +200,8 @@ def add_recipe(root):
         popup.resizable(False, False)
         popup.title("Edit Step")
         
-        tk.Label(popup, text="Step", bg=beige, font = ("Calibri", 10, "bold")).grid(row=0, column=0, padx=5, pady=5)
-        step_entry_popup = tk.Entry(popup, width=50, bg=beige, font = ("Calibri", 10, "bold"))
+        tk.Label(popup, text="Step", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=0, column=0, padx=5, pady=5)
+        step_entry_popup = tk.Entry(popup, width=50, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
         step_entry_popup.grid(row=0, column=1, padx=5, pady=5)
         step_entry_popup.insert(0, step_data)
         
@@ -239,7 +239,7 @@ def add_recipe(root):
             }
             recipes[recipe_name] = recipe 
             save_recipes(recipes)  
-            messagebox.showinfo("Success", "Recipe sucessfully added !")
+            #messagebox.showinfo("Success", "Recipe sucessfully added !")
             recipe_window.destroy()  
         else:
             messagebox.showwarning("Error", "Please fill all the entries.")
