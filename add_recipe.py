@@ -60,7 +60,7 @@ def add_recipe(root):
 
     ingredient_listbox = tk.Listbox(ingredients_steps_frame, height=10, width=50, **listbox_style_2)
     ingredient_listbox.grid(row=2, column=0, columnspan=3, padx=(10, 10), pady=(0, 0)) 
-    info_2_label = tk.Label(ingredients_steps_frame, text="         Ingredient                Quantity         Unit", font=("Calibri", 12), bg=black_gray, fg=beige, relief="flat")
+    info_2_label = tk.Label(ingredients_steps_frame, text="          Ingredient                Quantity        Unit", font=("Calibri", 12), bg=black_gray, fg=beige, relief="flat")
     info_2_label.grid(row=3, column=0, padx=(3, 12), pady=(0, 5), columnspan=3)
     ingredient_entry = tk.Entry(ingredients_steps_frame, width=25, relief="flat")
 
@@ -118,7 +118,7 @@ def add_recipe(root):
     def add_step():
         step = step_entry.get().strip()
         if step:
-            step_listbox.insert(tk.END, f"- {step}")
+            step_listbox.insert(tk.END, f"* {step}")
             step_entry.delete(0, tk.END)
         else:
             messagebox.showwarning("Error", "Please add a description for the step.")
@@ -158,17 +158,17 @@ def add_recipe(root):
         popup.title("Edit Ingredient")
         
         tk.Label(popup, text="Ingredient", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=0, column=0, padx=5, pady=5)
-        ingredient_name_entry = tk.Entry(popup, width=25, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
+        ingredient_name_entry = tk.Entry(popup, width=25, bg=light_gray, font = ("Calibri", 10, "bold"), relief="flat")
         ingredient_name_entry.grid(row=0, column=1, padx=5, pady=5)
         ingredient_name_entry.insert(0, name_part)
         
         tk.Label(popup, text="Quantity", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=1, column=0, padx=5, pady=5)
-        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
+        ingredient_quantity_entry = tk.Entry(popup, width=10, validate='key', validatecommand=vcmd, bg=light_gray, font = ("Calibri", 10, "bold"), relief="flat")
         ingredient_quantity_entry.grid(row=1, column=1, padx=5, pady=5)
         ingredient_quantity_entry.insert(0, quantity_part)
         
         tk.Label(popup, text="Unit", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=2, column=0, padx=5, pady=5)
-        ingredient_unit_entry = tk.Entry(popup, width=10, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
+        ingredient_unit_entry = tk.Entry(popup, width=10, bg=light_gray, font = ("Calibri", 10, "bold"), relief="flat")
         ingredient_unit_entry.grid(row=2, column=1, padx=5, pady=5)
         ingredient_unit_entry.insert(0, unit_part)
         
@@ -195,21 +195,23 @@ def add_recipe(root):
         
         popup = tk.Toplevel()
         popup.iconbitmap(icon_path)
-        popup.geometry("360x75")
+        popup.geometry("420x75")
         popup.configure(bg=beige)
         popup.resizable(False, False)
         popup.title("Edit Step")
         
         tk.Label(popup, text="Step", bg=beige, font = ("Calibri", 10, "bold"), relief="flat").grid(row=0, column=0, padx=5, pady=5)
-        step_entry_popup = tk.Entry(popup, width=50, bg=beige, font = ("Calibri", 10, "bold"), relief="flat")
+        step_entry_popup = tk.Entry(popup, width=50, bg=light_gray, font = ("Calibri", 10, "bold"), relief="flat")
         step_entry_popup.grid(row=0, column=1, padx=5, pady=5)
+        if step_data.startswith('*'):
+            step_data = step_data[1:].strip()
         step_entry_popup.insert(0, step_data)
         
         def save_step():
             new_step = step_entry_popup.get().strip()
             if new_step:
                 step_listbox.delete(index)
-                step_listbox.insert(index, new_step)
+                step_listbox.insert(index, f"* {new_step}")
                 popup.destroy()
             else:
                 messagebox.showwarning("Error", "Step cannot be empty.")

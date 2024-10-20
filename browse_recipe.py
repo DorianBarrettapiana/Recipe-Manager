@@ -110,7 +110,7 @@ def view_recipe(root):
             create_gradient(canvas, color1, color2)
 
             canvas.create_text(400, 25, text="Number of People", font=("Calibri", 12, "bold"), fill=beige)
-            
+
             num_people_entry = tk.Entry(canvas, width=6, justify="center", bg=beige, relief="flat")
             num_people_entry.insert(0, "1") 
             canvas.create_window(400, 50, window=num_people_entry)
@@ -121,26 +121,18 @@ def view_recipe(root):
             validate_command = recipe_detail_window.register(validate_input)  
             num_people_entry.config(validate="key", validatecommand=(validate_command, '%S'))
 
-            recipe_canvas = tk.Canvas(recipe_detail_window, bg=beige, relief="flat")
-            recipe_canvas.place(x=15, y=75, width=755, height=400)  
+            # Frame pour les informations de la recette
+            recipe_info_frame = tk.Frame(recipe_detail_window, bg=beige, relief="flat")
+            canvas.create_window(15, 75, window=recipe_info_frame, anchor="nw", width=770, height=400)
 
-            v_scrollbar = tk.Scrollbar(recipe_detail_window, orient="vertical", command=recipe_canvas.yview, relief="flat")
-            v_scrollbar.place(x=770, y=75, height=400)  
+            # Scrollbar pour le texte
+            v_scrollbar = tk.Scrollbar(recipe_info_frame, orient="vertical", relief="flat")
+            v_scrollbar.pack(side="right", fill="y")
 
-            recipe_canvas.configure(yscrollcommand=v_scrollbar.set)
-
-            recipe_info_frame = tk.Frame(recipe_canvas, bg=beige, relief="flat")
-            recipe_canvas.create_window((0, 0), window=recipe_info_frame, anchor="nw")
-
-            def on_frame_configure(event):
-                recipe_canvas.configure(scrollregion=recipe_canvas.bbox("all"))
-
-            recipe_info_frame.bind("<Configure>", on_frame_configure)
-
-            recipe_text = tk.Text(recipe_info_frame, width=755, height=400, padx=10, pady=10, bg=beige, fg=black_gray, font=("Calibri", 12), wrap="word", relief="flat")
-            recipe_text.pack(fill="both", expand=True, anchor="nw") 
+            # Text widget pour afficher la recette avec retour à la ligne automatique
+            recipe_text = tk.Text(recipe_info_frame, width=90, height=35, padx=10, pady=10, bg=beige, fg=black_gray, font=("Calibri", 12), wrap="word", relief="flat", yscrollcommand=v_scrollbar.set)
+            recipe_text.pack(fill="both", expand=True)
             v_scrollbar.config(command=recipe_text.yview)
-            recipe_text.config(yscrollcommand=v_scrollbar.set)
 
             def display_recipe_details(num_people):
                 ingredients_text = "\n".join(
@@ -192,7 +184,7 @@ def view_recipe(root):
                 img_label.config(image=img_tk)
                 img_label.image = img_tk  
             else:
-                canvas.create_text(400, 642, text="No image found", font=("Calibri", 26, "bold"), fill=beige)
+                canvas.create_text(400, 642, text="No image added yet :(", font=("Calibri", 28, "bold"), fill=beige)
 
             clean_temp_files()  
         else:

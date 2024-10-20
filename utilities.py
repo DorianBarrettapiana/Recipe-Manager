@@ -70,7 +70,7 @@ def load_recipe():
         with open(json_path, 'w') as f:
             empty_recipes = {}
             json.dump(empty_recipes, f, indent=4)
-            messagebox.showinfo("Info", f"File not found, created a new one at: {json_path}")
+            # messagebox.showinfo("Info", f"File not found, created a new one at: {json_path}")
         return empty_recipes
     
 # Save the recipe into a JSON file

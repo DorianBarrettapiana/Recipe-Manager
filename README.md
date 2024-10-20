@@ -2,12 +2,14 @@
 
 This project is a recipe management application developed in Python using Tkinter for the graphical interface and JSON for data storage. It allows users to create, manage, and import/export to share recipes. The application includes features like ingredient and step management, difficulty and price rating, and encoding images in Base64 format to store them in a JSON file.
 
+![Exemple of usage](temp\Screenshot_recipe_manager.png)
+
 ## Features
 
 - **Add Recipes**: Create new recipes with name, ingredients, steps, difficulty, price, and an image (optional).
 - **Import/Export Recipes**: Share your recipes with friends by exporting them to a JSON file, which can be imported by others.
 - **Image Encoding**: Encode images in Base64 and store them in the JSON file to keep everything in a single file.
-- **Recipe Management**: Browse, edit and sort your recipes.
+- **Recipe Management**: Browse, display, edit and sort your recipes.
 
 ## Requirements
 
@@ -30,6 +32,4 @@ This project is a recipe management application developed in Python using Tkinte
    You can package it using pyInstaller:
 
    ```bash
-   pyinstaller --onedir --windowed --add-data "resources:resources" main.py
-
-#### (An exe file is already packaged in the build folder)
+   pyinstaller --noconfirm --onefile --windowed --icon "resources\Fork_Knife.ico" --name "Recipe Manager" --add-data "resources:resources/"  main.py
