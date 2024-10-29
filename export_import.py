@@ -5,36 +5,31 @@ from tkinter import messagebox, filedialog
 from utilities import *
 
 # Export a recipe to a JSON file to share
-def export_recipe(root):
+def export(root):
+    # Only start if recipes exist
     recipes = load_recipe()  
     if not recipes:
         return  
 
-    export_window = tk.Toplevel()  
+    export_window = tk.Toplevel() 
     export_window.iconbitmap(icon_path)  
     export_window.title("Export Recipes")
     export_window.geometry("480x380")
+    export_window.configure(bg=black_gray) 
     export_window.resizable(False, False)
 
     export_window.transient(root)
     export_window.grab_set()
 
-    canvas = tk.Canvas(export_window, width=480, height=380, relief="flat")
-    canvas.pack(fill="both", expand=True)
+    listbox = tk.Listbox(export_window, width=56, height=15, **listbox_style)
+    listbox.grid(row=0, column=0, padx=(6, 0), pady=(5, 15), sticky='nw')
 
-    color1 = hex_to_rgb(black_gray)  
-    color2 = hex_to_rgb(black_gray)
+    scrollbar = tk.Scrollbar(export_window, relief="flat")
+    scrollbar.grid(row=0, column=1, padx=(0, 0), pady=(5, 15), sticky='ns')  # Stick to 'ns' for vertical stretching
+    listbox.config(yscrollcommand=scrollbar.set)
+    scrollbar.config(command=listbox.yview)
 
-    canvas.update()
-    create_gradient(canvas, color1, color2)
-    
-    frame = tk.Frame(canvas, relief="flat")
-    frame.place(x=15, y=16, width=450, height=280)
-
-    listbox = tk.Listbox(frame, width=53, height=20, **listbox_style)
-    listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-    # Managing single, double click and ctrl click
+    # Single, double click and ctrl click
     def on_single_click(event):
         index = listbox.nearest(event.y)  
         if index >= 0:
@@ -52,20 +47,15 @@ def export_recipe(root):
         if index >= 0:
             listbox.selection_clear(0, tk.END) 
             listbox.selection_set(index)  
-            select_recipe()
+            export_recipe()
 
     listbox.bind("<Button-1>", lambda event: root.after(0, on_single_click, event))
     listbox.bind("<Double-Button-1>", on_double_click)
 
-    scrollbar = tk.Scrollbar(frame, relief="flat")
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-    listbox.config(yscrollcommand=scrollbar.set)
-    scrollbar.config(command=listbox.yview)
-
     for recipe_name in recipes.keys():
         listbox.insert(tk.END, recipe_name)
 
-    def select_recipe():
+    def export_recipe():
         try:
             selected_indices = listbox.curselection()
             if not selected_indices:
@@ -84,14 +74,12 @@ def export_recipe(root):
         except tk.TclError:
             messagebox.showwarning("Select a Recipe", "Select one or more recipes to export.")
 
-    select_button = tk.Button(canvas, text="Export", command=select_recipe, **button_style, height=1, width=15)
-    select_button.bind("<Enter>", on_enter)
-    select_button.bind("<Leave>", on_leave)
-    select_button.place(x=150, y=322)
+    select_button = tk.Button(export_window, text="Export", command=export_recipe, **button_style)
+    select_button.grid(row=1, column=0, columnspan=2, pady=(0, 8))  # Center by spanning both columns
 
 # Import an exported JSON file to add to the database
 def import_recipe():
-    filepath = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")])
+    filepath = filedialog.askopenfilename(defaultextension=".json", filetypes=[("JSON files", "*.json")]) # Search for JSON file in the computer files
     if filepath:
         with open(filepath, 'r') as import_file:
             try:

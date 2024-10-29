@@ -19,3 +19,9 @@ build/Recipe Manager/EXE-00.toc
 build/Recipe Manager/base_library.zip
 build/Recipe Manager/Analysis-00.toc
 Recipe Manager.spec
+__pycache__/add_recipe.cpython-311.pyc
+__pycache__/browse_recipe.cpython-311.pyc
+__pycache__/export_import.cpython-311.pyc
+__pycache__/settings.cpython-311.pyc
+__pycache__/settings.cpython-312.pyc
+__pycache__/utilities.cpython-311.pyc

@@ -1,51 +1,52 @@
 import tkinter as tk
+from PIL import Image, ImageTk
 from utilities import *
 from add_recipe import *
 from browse_recipe import *
 from export_import import *
+from settings import *
 
 def main():
-    # Setting up the main frame
-    root = tk.Tk()
-    root.title("Recipe Manager")
-    root.geometry("700x380")
-    root.iconbitmap(icon_path) 
-    root.resizable(False, False)  
+    root = tk.Tk() # Initialize main window
+    root.title("Recipe Manager") # Title of the window
+    root.geometry("700x380") # Size
+    root.configure(bg=black_gray) # Background color
+    root.iconbitmap(icon_path) # Icon of the window
+    root.resizable(False, False) # Non resizable 
 
-    # Create a canvas for the background
-    canvas = tk.Canvas(root, width=700, height=380)
-    canvas.pack(fill="both", expand=True)
+    # Configuration of columns
+    root.grid_columnconfigure(0, weight=1)  # Left
+    root.grid_columnconfigure(2, weight=1)  # Center (buttons)
+    root.grid_columnconfigure(4, weight=1)  # Right
 
-    # Colors for the gradient
-    color1 = hex_to_rgb(black_gray)  
-    color2 = hex_to_rgb(black_gray)  
+    # Title
+    title = tk.Label(root, text="Recipe Manager", **label_tit_style)
+    title.grid(row=0, column=1, columnspan=3, pady=(33, 30), sticky="n")
 
-    root.update()
-    create_gradient(canvas, color1, color2)
+    # Settings button
+    settings_img = Image.open(settings_icon_path) # Usage of an image as button support
+    settings_img = settings_img.resize((22, 22)) # Resizing it
+    settings_im = ImageTk.PhotoImage(settings_img)
+    settings_button = tk.Button(root, image=settings_im, command=lambda: settings(root), **button_im_style)
+    settings_button.image = settings_im  # Reference to the image to keep it displayed and not collected by garbage collector
+    settings_button.grid(row=0, column=4, sticky="ne", padx=(0, 33), pady=(33, 0))
 
-    # Draw text directly on the canvas
-    canvas.create_text(350, 75, text="Recipe Manager", font=("Calibri", 26, "bold"), fill=beige)
+    # Main buttons
+    add_button = tk.Button(root, text="Add a recipe", command=lambda: add_recipe(root), **button_style)
+    add_button.grid(row=1, column=2, pady=(11, 11))
+    # ---------------------------------------------------------------------------------------------------------
+    view_button = tk.Button(root, text="Browse recipes", command=lambda: view_recipe(root), **button_style)
+    view_button.grid(row=2, column=2, pady=(11, 11))
+    # ---------------------------------------------------------------------------------------------------------
+    export_button = tk.Button(root, text="Export recipes", command=lambda: export(root), **button_style)
+    export_button.grid(row=3, column=2, pady=(11, 11))
+    # ---------------------------------------------------------------------------------------------------------
+    import_button = tk.Button(root, text="Import recipes", command=import_recipe, **button_style)
+    import_button.grid(row=4, column=2, pady=(11, 11))
 
-    # Adding all the bottom
-    add_button = tk.Button(root, text="Add a recipe", height = 1, width = 15, **button_style, activebackground=pale_blue, command=lambda:add_recipe(root))
-    add_button.bind("<Enter>", on_enter)
-    add_button.bind("<Leave>", on_leave)
-    canvas.create_window(350, 160, window=add_button)
-
-    view_button = tk.Button(root, text="Browse recipes", height = 1, width = 15, **button_style, activebackground=pale_blue, command=lambda:view_recipe(root))
-    view_button.bind("<Enter>", on_enter)
-    view_button.bind("<Leave>", on_leave)
-    canvas.create_window(350, 205, window=view_button)
-
-    export_button = tk.Button(root, text="Export recipes", height = 1, width = 15, **button_style, activebackground=pale_blue, command=lambda:export_recipe(root))
-    export_button.bind("<Enter>", on_enter)
-    export_button.bind("<Leave>", on_leave)
-    canvas.create_window(350, 250, window=export_button)
-
-    import_button = tk.Button(root, text="Import recipes", height = 1, width = 15, **button_style, activebackground=pale_blue, command=import_recipe)
-    import_button.bind("<Enter>", on_enter)
-    import_button.bind("<Leave>", on_leave)
-    canvas.create_window(350, 295, window=import_button)
+    # Version of the app 
+    version = tk.Label(root, text="v1.1", **label_mini_style)
+    version.grid(row=6, column=0, padx=(33, 0), pady=(0, 33), sticky="w")
 
     root.mainloop()
 

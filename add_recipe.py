@@ -12,6 +12,9 @@ def add_recipe(root):
     recipe_window.geometry("700x700") 
     recipe_window.resizable(False, False)
 
+    recipe_window.transient(root) # Take the lead over the main window
+    recipe_window.grab_set() # As long as actions are done on this window
+
     name_label = tk.Label(recipe_window, text="Name", font=("Calibri", 18, "bold"), bg=black_gray, fg=beige, relief="flat")
     name_entry = tk.Entry(recipe_window, width=50, relief="flat")
     name_label.pack(pady=(20, 10))
@@ -194,7 +197,7 @@ def add_recipe(root):
             else:
                 messagebox.showwarning("Error", "All fields must be filled.")
         
-        save_button = tk.Button(popup, text="Save", command=save_ingredient, **button_style_mini)
+        save_button = tk.Button(popup, text="Save", command=save_ingredient, **button_mini_style)
         save_button.bind("<Enter>", on_enter)
         save_button.bind("<Leave>", on_leave)
         save_button.grid(row=3, column=0, columnspan=2, padx=5, pady=10)
@@ -230,7 +233,7 @@ def add_recipe(root):
             else:
                 messagebox.showwarning("Error", "Step cannot be empty.")
         
-        save_button = tk.Button(popup, text="Save", command=save_step, **button_style_mini)
+        save_button = tk.Button(popup, text="Save", command=save_step, **button_mini_style)
         save_button.bind("<Enter>", on_enter)
         save_button.bind("<Leave>", on_leave)
         save_button.grid(row=1, column=0, columnspan=2, padx=5, pady=10)

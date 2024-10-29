@@ -155,7 +155,7 @@ def view_recipe(root):
                 except ValueError:
                     messagebox.showwarning("Error", "Enter a valid number.")
 
-            update_button = tk.Button(canvas, text="Update", **button_style_mini, command=update_recipe_details)
+            update_button = tk.Button(canvas, text="Update", **button_mini_style, command=update_recipe_details)
             update_button.bind("<Enter>", on_enter)
             update_button.bind("<Leave>", on_leave)
             canvas.create_window(466, 50, window=update_button)
@@ -207,32 +207,32 @@ def view_recipe(root):
             recipe_listbox.insert(tk.END, f"{name} - Difficulty: {details['difficulty']} - Price: {details['price']}")
 
     # Sorting buttons
-    difficulty_asc_button = tk.Button(canvas, text="Difficulty ↑", command=lambda: sort_recipes('difficulty'), **button_style_mini)
+    difficulty_asc_button = tk.Button(canvas, text="Difficulty ↑", command=lambda: sort_recipes('difficulty'), **button_mini_style)
     difficulty_asc_button.bind("<Enter>", on_enter)
     difficulty_asc_button.bind("<Leave>", on_leave)
     canvas.create_window(150, 316, window=difficulty_asc_button)
 
-    difficulty_desc_button = tk.Button(canvas, text="Difficulty ↓", command=lambda: sort_recipes('difficulty', reverse=True), **button_style_mini)
+    difficulty_desc_button = tk.Button(canvas, text="Difficulty ↓", command=lambda: sort_recipes('difficulty', reverse=True), **button_mini_style)
     difficulty_desc_button.bind("<Enter>", on_enter)
     difficulty_desc_button.bind("<Leave>", on_leave)
     canvas.create_window(150, 345, window=difficulty_desc_button)
 
-    price_asc_button = tk.Button(canvas, text="$ ↑", command=lambda: sort_recipes('price'), **button_style_mini)
+    price_asc_button = tk.Button(canvas, text="$ ↑", command=lambda: sort_recipes('price'), **button_mini_style)
     price_asc_button.bind("<Enter>", on_enter)
     price_asc_button.bind("<Leave>", on_leave)
     canvas.create_window(240, 316, window=price_asc_button)
 
-    price_desc_button = tk.Button(canvas, text="$ ↓", command=lambda: sort_recipes('price', reverse=True), **button_style_mini)
+    price_desc_button = tk.Button(canvas, text="$ ↓", command=lambda: sort_recipes('price', reverse=True), **button_mini_style)
     price_desc_button.bind("<Enter>", on_enter)
     price_desc_button.bind("<Leave>", on_leave)
     canvas.create_window(240, 345, window=price_desc_button)
 
-    name_asc_button = tk.Button(canvas, text="A-Z", command=lambda: sort_recipes(by='name', alphabetical=True), **button_style_mini)
+    name_asc_button = tk.Button(canvas, text="A-Z", command=lambda: sort_recipes(by='name', alphabetical=True), **button_mini_style)
     name_asc_button.bind("<Enter>", on_enter)
     name_asc_button.bind("<Leave>", on_leave)
     canvas.create_window(330, 316, window=name_asc_button)
 
-    name_desc_button = tk.Button(canvas, text="Z-A", command=lambda: sort_recipes(by='name', alphabetical=True, reverse=True), **button_style_mini)
+    name_desc_button = tk.Button(canvas, text="Z-A", command=lambda: sort_recipes(by='name', alphabetical=True, reverse=True), **button_mini_style)
     name_desc_button.bind("<Enter>", on_enter)
     name_desc_button.bind("<Leave>", on_leave)
     canvas.create_window(330, 345, window=name_desc_button)

@@ -6,22 +6,29 @@ from tkinter import messagebox
 
 # Definition of colors
 beige = "#F7F7F7"         # Light beige
-light_gray = "#D3D3D3"    # Light Gray
-pale_blue = "#A3C1DA"     # Pale Blue
-pale_pink = "#F8D7DA"     # Pale Pink
-sage_green = "#B7C4A1"    # Sage Green
-light_brown = "#A58A68"   # Light Brown
-pastel_yellow = "#FFFACD" # Pastel Yellow
-bluish_gray = "#BCCCDC"   # Bluish Gray
+fab_yellow = "#FABE00"    # Fab Yellow
 dark_gray = "#4A4A4A"     # Dark Gray
 black_gray =  "#2C2C2C"   # Black Gray
+pale_blue = "#A3C1DA"     # Pale Blue
+sage_green = "#B7C4A1"    # Sage Green
+pale_pink = "#F8D7DA"     # Pale Pink
+pink_purple = "#AA143C"   # Pink Purple
+light_gray = "#D3D3D3"    # Light Gray
 
 # Styles
-listbox_style = {"font": ("Calibri", 12), "background": beige, "fg": black_gray, "selectmode":tk.MULTIPLE,"selectbackground": sage_green, "selectforeground": black_gray, "borderwidth": 0, "relief": "flat"}
-listbox_style_2 = {"background": beige, "fg": black_gray, "selectmode":tk.MULTIPLE,"selectbackground": sage_green, "selectforeground": black_gray, "borderwidth": 0, "relief": "flat"}
-button_style = {"font": ("Calibri", 14, "bold"), "borderwidth": 0, "background": pale_blue, "fg": black_gray, "relief": "flat"}
-button_style_mini = {"font": ("Calibri", 10, "bold"), "borderwidth": 0, "background": pale_blue, "fg": black_gray, "relief": "flat"}
-button_style_2 = {"borderwidth": 0, "background": pale_blue, "fg": black_gray, "relief": "flat"}
+label_tit_style = {'font':('Calibri', 26, 'bold'), 'bg':black_gray, 'fg':beige, 'relief':'flat'}
+label_style = {'font':('Calibri', 12, 'bold'), 'bg':black_gray, 'fg':beige, 'relief':'flat'}
+label_mini_style = {'font':('Calibri', 10, 'bold'), 'bg':black_gray, 'fg':beige, 'relief':'flat'}
+# ------------------------------------------------------------------------------------------------
+button_style = {'font': ('Calibri', 14, 'bold'), 'height':1, 'width':15, 'borderwidth': 0, 'bg': fab_yellow, 'fg': black_gray, 'relief': 'flat', 'activebackground':fab_yellow}
+button_mini_style = {'font': ('Calibri', 8, 'bold'), 'height':1, 'width':10, 'borderwidth': 0, 'bg': fab_yellow, 'fg': black_gray, 'relief': 'flat', 'activebackground':fab_yellow}
+button_im_style = {'height':25, 'width':25, 'borderwidth': 0, 'bg': black_gray, 'fg': black_gray, 'relief': 'flat', 'activebackground':black_gray, 'highlightthickness':0}
+# ------------------------------------------------------------------------------------------------
+button_style_2 = {"borderwidth": 0, "background": pale_blue, "fg": black_gray, "relief": "flat", 'activebackground':fab_yellow}
+
+listbox_style = {"font": ("Calibri", 12), "background": beige, "fg": black_gray, "selectmode":tk.MULTIPLE,"selectbackground": sage_green, "selectforeground": black_gray, "borderwidth": 0, "relief": "flat", 'activestyle':'none'}
+listbox_style_2 = {"background": beige, "fg": black_gray, "selectmode":tk.MULTIPLE,"selectbackground": sage_green, "selectforeground": black_gray, "borderwidth": 0, "relief": "flat", 'activestyle':'none'}
+
 
 # Get the path of the main file
 def get_base_path():
@@ -39,6 +46,7 @@ def get_recipes_directory():
 # Get the useful paths
 base_path = get_base_path()
 icon_path = os.path.join(base_path, 'resources/Fork_Knife.ico')
+settings_icon_path = os.path.join(base_path, 'resources/settings.png')
 im_dir = os.path.join(base_path, 'temp')
 im_path = os.path.join(base_path, 'temp_image.png')
 recipes_dir = get_recipes_directory()  
