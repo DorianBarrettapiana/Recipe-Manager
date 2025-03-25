@@ -24,8 +24,7 @@ This project is a recipe management application developed in Python using Tkinte
    Open your terminal in the directory of your choice and run the following command:
 
    ```bash
-   git clone https://github.com/Nayrhode/recipe-manager.git
-   cd recipe-manager
+   git clone https://github.com/DorianBarrettapiana/recipe-manager.git
 
 2. **exe packaging (example with pyInstaller):**
 
