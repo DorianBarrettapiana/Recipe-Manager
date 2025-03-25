@@ -1,21 +1,5 @@
 .gitignore
-__pycache__/utilities.cpython-312.pyc
-__pycache__/export_import.cpython-312.pyc
-__pycache__/browse_recipe.cpython-312.pyc
-__pycache__/add_recipe.cpython-312.pyc
-dist/Recipe Manager.exe
-build/Recipe Manager/localpycs/struct.pyc
-build/Recipe Manager/localpycs/pyimod04_pywin32.pyc
-build/Recipe Manager/localpycs/pyimod03_ctypes.pyc
-build/Recipe Manager/localpycs/pyimod02_importers.pyc
-build/Recipe Manager/localpycs/pyimod01_archive.pyc
-build/Recipe Manager/xref-Recipe Manager.html
-build/Recipe Manager/warn-Recipe Manager.txt
-build/Recipe Manager/Recipe Manager.pkg
-build/Recipe Manager/PYZ-00.toc
-build/Recipe Manager/PYZ-00.pyz
-build/Recipe Manager/PKG-00.toc
-build/Recipe Manager/EXE-00.toc
-build/Recipe Manager/base_library.zip
-build/Recipe Manager/Analysis-00.toc
+__pycache__/*
+dist/*
+build/*
 Recipe Manager.spec

@@ -299,7 +299,7 @@ def add_recipe(root):
             }
             recipes[recipe_name] = recipe 
             save_recipes(recipes)  
-            #messagebox.showinfo("Success", "Recipe sucessfully added !")
+            # messagebox.showinfo("Success", "Recipe sucessfully added !")
             recipe_window.destroy()  
         else:
             messagebox.showwarning("Error", "Please fill all the entries.")

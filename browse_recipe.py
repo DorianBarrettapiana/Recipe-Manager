@@ -71,7 +71,7 @@ def view_recipe(root):
     def delete_selected_recipes():
         selected_indices = recipe_listbox.curselection() 
         if not selected_indices:
-            #messagebox.showwarning("Warning", "Please select at least one recipe to delete.")
+            # messagebox.showwarning("Warning", "Please select at least one recipe to delete.")
             return
 
         for index in reversed(selected_indices):  
